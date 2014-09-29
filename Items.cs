@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using WarZLocal_Admin.Properties;
 
 namespace WarZLocal_Admin
 {
@@ -208,7 +209,7 @@ namespace WarZLocal_Admin
                         pb.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
                             new Size(128, 128));
                     else
-                        pb.Image = ImageUtilities.getThumb(Properties.Resources.no_icon, new Size(128, 128));
+                        pb.Image = ImageUtilities.getThumb(Resources.no_icon, new Size(128, 128));
                 }
 
                 /*

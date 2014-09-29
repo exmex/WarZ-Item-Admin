@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using WarZLocal_Admin.Properties;
 
 namespace WarZLocal_Admin
 {
@@ -29,12 +30,10 @@ namespace WarZLocal_Admin
             listView2.Clear();
             imageList2.ImageSize = currentRes;
             imageList2.Images.Clear();
-            imageList2.Images.Add(ImageUtilities.getThumb(Properties.Resources.no_icon, currentRes));
+            imageList2.Images.Add(ImageUtilities.getThumb(Resources.no_icon, currentRes));
 
             loadingCircle1.Visible = true;
             loadingCircle1.Start();
-
-            Console.WriteLine(Properties.Settings.Default.itemsDBFile);
 
             using (XmlReader reader = XmlReader.Create(Properties.Settings.Default.itemsDBFile))
             {
@@ -143,7 +142,7 @@ namespace WarZLocal_Admin
             panel1.Visible = false;
             imageList2.ImageSize = currentRes;
             imageList2.Images.Clear();
-            imageList2.Images.Add(ImageUtilities.getThumb(Properties.Resources.no_icon, currentRes));
+            imageList2.Images.Add(ImageUtilities.getThumb(Resources.no_icon, currentRes));
             listView2.Clear();
 
             List<ListViewItem> lvil = new List<ListViewItem>();
@@ -333,7 +332,7 @@ namespace WarZLocal_Admin
             listView1.Clear();
             imageList1.ImageSize = currentRes2;
             imageList1.Images.Clear();
-            imageList1.Images.Add(ImageUtilities.getThumb(Properties.Resources.no_icon, currentRes2));
+            imageList1.Images.Add(ImageUtilities.getThumb(Resources.no_icon, currentRes2));
 
             List<ListViewItem> lvil = new List<ListViewItem>();
 
@@ -506,7 +505,7 @@ namespace WarZLocal_Admin
                             pictureBox1.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
                                 new Size(128, 128));
                         else
-                            pictureBox1.Image = ImageUtilities.getThumb(Properties.Resources.no_icon, new Size(128, 128));
+                            pictureBox1.Image = ImageUtilities.getThumb(Resources.no_icon, new Size(128, 128));
 
                         label1.Text = i.Value.desc;
                         label5.Text = i.Value.name + " (" + i.Value.itemID + ")";
@@ -521,7 +520,7 @@ namespace WarZLocal_Admin
             else
             {
                 panel1.Visible = false;
-                pictureBox1.Image = ImageUtilities.getThumb(Properties.Resources.no_icon, new Size(128, 128));
+                pictureBox1.Image = ImageUtilities.getThumb(Resources.no_icon, new Size(128, 128));
             }
         }
 
