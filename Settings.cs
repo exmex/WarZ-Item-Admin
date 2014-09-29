@@ -186,6 +186,7 @@ namespace WarZLocal_Admin
 
                 label4.Invoke((MethodInvoker)(() =>
                 {
+                    textBox1.Text = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Data";
                     label4.Visible = false;
                     loadingCircle1.Visible = false;
                     loadingCircle1.Stop();
