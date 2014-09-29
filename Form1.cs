@@ -560,6 +560,7 @@ namespace WarZLocal_Admin
                 if (i.Value.binding == listView2.SelectedIndices[0])
                 {
                     Items.showEditForm(i.Value);
+
                     EditItem ei = new EditItem(i.Value);
                     if (ei.ShowDialog() == DialogResult.OK)
                     {

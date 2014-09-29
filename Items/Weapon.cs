@@ -29,7 +29,9 @@ namespace WarZLocal_Admin
             i.itemID = Helper.getInt(reader.GetAttribute(0));
             i.category = Helper.getInt(reader.GetAttribute(1));
             i.internalCategory = 0;
-            i.weight = Helper.getInt(reader.GetAttribute(2));
+            i.upgrade = Helper.getInt(reader.GetAttribute(2));
+            i.fname = reader.GetAttribute(3);
+            i.weight = Helper.getInt(reader.GetAttribute(4));
 
             XmlReader subs = reader.ReadSubtree();
             while (subs.Read())

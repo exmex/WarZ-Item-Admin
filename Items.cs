@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
@@ -175,26 +176,53 @@ namespace WarZLocal_Admin
         {
             var items = editForm(i);
             Form frm = new Form();
+            frm.BackColor = Color.White;
+            //frm.Size = new Size(480, 580);
+            frm.Size = new Size(255, 580);
+            frm.Text = "Edit " + i.name;
 
             Panel pan = new Panel();
             pan.AutoScroll = true;
             pan.Dock = DockStyle.Fill;
+            pan.BackColor = Color.White;
+            pan.AutoScrollMargin = new Size(10, 10);
 
-            Point start = new Point(5, 5);
+            PictureBox pb = new PictureBox();
+            pb.Size = new Size(128, 128);
+            //pb.Location = new Point(176, 5);
+            pb.Location = new Point(64, 5);
+            pan.Controls.Add(pb);
+
+            Point start = new Point(5, 138);
             int rows = 0;
             int cols = 1;
 
             foreach (var iv in items)
             {
-                if (iv.Value == null || string.IsNullOrEmpty(iv.Value) || iv.Value == "-999" || iv.Key == "binding")
+                if (iv.Value == null || iv.Key == null || string.IsNullOrEmpty(iv.Value) || iv.Value == "-999" || iv.Key == "binding" || iv.Key == "internalCategory")
                     continue;
 
-                if (rows >= 5)
+                if (iv.Key == "image")
                 {
-                    start = new Point(cols*250, 5);
+                    string img = iv.Value.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
+                    img = img.Replace(".dds", ".png");
+                    if (File.Exists(img))
+                        pb.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
+                            new Size(128, 128));
+                    else
+                        pb.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile("D:/Server/Open-WarZ/source/bin/Data/Weapons/no_icon.png"), new Size(128, 128));
+                }
+
+                /*
+                if ((rows >= 15 && cols < 2) || (cols >= 2 && rows >= 20))
+                {
+                    int y = 138;
+                    if (cols >= 1)
+                        y = 15;
+                    start = new Point(cols*250, y);
                     cols++;
                     rows = 0;
-                }
+                }*/
                 Label lb = new Label();
                 lb.Location = start;
                 lb.Text = iv.Key;
@@ -225,14 +253,18 @@ namespace WarZLocal_Admin
             var s = i;
             foreach (var p in s.GetType().GetFields())
             {
-                Console.WriteLine(p.Name + " " + p.GetValue(i));
+                if (p.GetValue(i) == null)
+                {
+                    Console.WriteLine(p.Name);
+                    continue;
+                }
                 try
                 {
                     dic.Add(p.Name, p.GetValue(i).ToString());
                 }
                 catch (Exception ex)
                 {
-                    
+                    MessageBox.Show(ex.ToString());
                 }
             }
             return dic;
