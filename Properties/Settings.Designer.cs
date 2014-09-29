@@ -23,30 +23,39 @@ namespace WarZLocal_Admin.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:\\Server\\Open-WarZ\\source\\bin\\Data")]
         public string dataFolder {
             get {
                 return ((string)(this["dataFolder"]));
             }
+            set {
+                this["dataFolder"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:\\Server\\Open-WarZ\\source\\bin\\Data\\Weapons\\itemsDB.xml\t")]
         public string itemsDBFile {
             get {
                 return ((string)(this["itemsDBFile"]));
             }
+            set {
+                this["itemsDBFile"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:\\Server\\Open-WarZ\\source\\bin\\Data\\Weapons\\shopDB.xml\t")]
         public string shopDBFile {
             get {
                 return ((string)(this["shopDBFile"]));
+            }
+            set {
+                this["shopDBFile"] = value;
             }
         }
     }

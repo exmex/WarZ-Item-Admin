@@ -28,7 +28,8 @@ namespace WarZLocal_Admin
                         i.name = subs.GetAttribute(0);
                         i.image = subs.GetAttribute(1);
                         i.desc = subs.GetAttribute(2);
-                        i.levelRequired = Helper.getInt(subs.GetAttribute(3));
+                        if(subs.AttributeCount > 3)
+                            i.levelRequired = Helper.getInt(subs.GetAttribute(3));
                         break;
                     case "Property":
                         i.health = Helper.getInt(subs.GetAttribute(0));

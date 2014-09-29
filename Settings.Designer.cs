@@ -36,6 +36,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.quickConfig = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.loadingCircle1 = new WarZLocal_Admin.LoadingCircle(this.components);
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -51,8 +53,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.label4 = new System.Windows.Forms.Label();
-            this.loadingCircle1 = new WarZLocal_Admin.LoadingCircle(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -117,6 +117,30 @@
             this.quickConfig.Name = "quickConfig";
             this.quickConfig.Size = new System.Drawing.Size(531, 390);
             this.quickConfig.TabIndex = 0;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(213, 266);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "label4";
+            this.label4.Visible = false;
+            // 
+            // loadingCircle1
+            // 
+            this.loadingCircle1.InnerCircleRadius = 10;
+            this.loadingCircle1.LineWidth = 3;
+            this.loadingCircle1.Location = new System.Drawing.Point(197, 199);
+            this.loadingCircle1.Name = "loadingCircle1";
+            this.loadingCircle1.OutnerCircleRadius = 30;
+            this.loadingCircle1.Size = new System.Drawing.Size(64, 64);
+            this.loadingCircle1.Speed = 100;
+            this.loadingCircle1.SpokesMember = 12;
+            this.loadingCircle1.TabIndex = 4;
+            this.loadingCircle1.ThemeColor = System.Drawing.Color.DodgerBlue;
+            this.loadingCircle1.Visible = false;
             // 
             // button6
             // 
@@ -236,6 +260,7 @@
             this.button2.TabIndex = 0;
             this.button2.Text = "Save";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -252,30 +277,6 @@
             this.openFileDialog1.DefaultExt = "xml";
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "XML File|*.xml";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(213, 266);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "label4";
-            this.label4.Visible = false;
-            // 
-            // loadingCircle1
-            // 
-            this.loadingCircle1.InnerCircleRadius = 10;
-            this.loadingCircle1.LineWidth = 3;
-            this.loadingCircle1.Location = new System.Drawing.Point(197, 199);
-            this.loadingCircle1.Name = "loadingCircle1";
-            this.loadingCircle1.OutnerCircleRadius = 30;
-            this.loadingCircle1.Size = new System.Drawing.Size(64, 64);
-            this.loadingCircle1.Speed = 100;
-            this.loadingCircle1.SpokesMember = 12;
-            this.loadingCircle1.TabIndex = 4;
-            this.loadingCircle1.ThemeColor = System.Drawing.Color.DodgerBlue;
-            this.loadingCircle1.Visible = false;
             // 
             // Settings
             // 

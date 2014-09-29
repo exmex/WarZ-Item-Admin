@@ -28,6 +28,11 @@ namespace WarZLocal_Admin
         private void Settings_Load(object sender, EventArgs e)
         {
             //folderBrowserDialog1.SelectedPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Arktos Entertainment Group\WarZ", "Installed", null);
+
+            textBox1.Text = Properties.Settings.Default.dataFolder;
+            textBox2.Text = Properties.Settings.Default.itemsDBFile;
+            textBox3.Text = Properties.Settings.Default.shopDBFile;
+
             folderBrowserDialog1.SelectedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string pathing = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Data";
             if (Directory.Exists(pathing) && File.Exists(pathing+".zip"))
@@ -193,6 +198,16 @@ namespace WarZLocal_Admin
                 }));
             }));
             td.Start();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.dataFolder = textBox1.Text;
+            Properties.Settings.Default.itemsDBFile = textBox2.Text;
+            Properties.Settings.Default.shopDBFile = textBox3.Text;
+            Properties.Settings.Default.Save();
+
+            DialogResult = DialogResult.OK;
         }
     }
 }
