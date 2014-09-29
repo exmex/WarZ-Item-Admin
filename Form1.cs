@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -321,11 +316,6 @@ namespace WarZLocal_Admin
 
         public void LoadShopXML()
         {
-            foreach (KeyValuePair<int, Items> i in itemsDB)
-            {
-                i.Value.binding = -1;
-            }
-
             panel1.Visible = false;
             listView1.Clear();
             imageList1.ImageSize = currentRes2;
@@ -334,28 +324,34 @@ namespace WarZLocal_Admin
 
             List<ListViewItem> lvil = new List<ListViewItem>();
 
-            foreach (KeyValuePair<int, Items> i in itemsDB)
+            Thread td = new Thread((() =>
             {
-                if (i.Value.pricePerm <= 0 || i.Value.pricePerm == -999)
-                    continue;
-                if (tabControl1.SelectedIndex == 1)
-                    i.Value.binding = listView1.Items.Count;
-                string img = i.Value.image.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
-                img = img.Replace(".dds", ".png");
-                //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
+                foreach (KeyValuePair<int, Items> i in itemsDB)
+                {
+                    i.Value.binding = -1;
 
-                ListViewItem lvi = new ListViewItem(i.Value.name + "\n" + i.Value.pricePerm + " GD");
-                lvi.ImageIndex = imageList1.Images.Count;
+                    if (i.Value.pricePerm <= 0 || i.Value.pricePerm == -999)
+                        continue;
+                    //if (tabControl1.SelectedIndex == 1)
+                        i.Value.binding = listView1.Items.Count;
+                    string img = i.Value.image.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
+                    img = img.Replace(".dds", ".png");
+                    //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
 
-                if (File.Exists(img))
-                    imageList1.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
-                        currentRes));
-                else
-                    lvi.ImageIndex = 0;
-                //listView1.Items.Add(lvi);
-                lvil.Add(lvi);
-            }
-            listView1.Items.AddRange(lvil.ToArray());
+                    ListViewItem lvi = new ListViewItem(i.Value.name + "\n" + i.Value.pricePerm + " GD");
+                    lvi.ImageIndex = imageList1.Images.Count;
+
+                    if (File.Exists(img))
+                        imageList1.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
+                            currentRes));
+                    else
+                        lvi.ImageIndex = 0;
+                    //listView1.Items.Add(lvi);
+                    lvil.Add(lvi);
+                }
+                listView1.Invoke((MethodInvoker)(() => listView1.Items.AddRange(lvil.ToArray())));
+            }));
+            td.Start();
 
             /*using (XmlReader reader = XmlReader.Create(@"D:\Server\Open-WarZ\source\bin\Data\Weapons\shopDB.xml"))
             {

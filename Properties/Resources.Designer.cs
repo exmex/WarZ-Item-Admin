@@ -9,9 +9,6 @@
 //------------------------------------------------------------------------------
 
 namespace WarZLocal_Admin.Properties {
-    using System;
-    
-    
     /// <summary>
     ///   Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
     /// </summary>
