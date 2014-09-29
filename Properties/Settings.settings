@@ -1,7 +1,15 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WarZLocal_Admin.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="dataFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\Server\Open-WarZ\source\bin\Data</Value>
+    </Setting>
+    <Setting Name="itemsDBFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\Server\Open-WarZ\source\bin\Data\Weapons\itemsDB.xml	</Value>
+    </Setting>
+    <Setting Name="shopDBFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\Server\Open-WarZ\source\bin\Data\Weapons\shopDB.xml	</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

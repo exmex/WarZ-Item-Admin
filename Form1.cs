@@ -15,7 +15,7 @@ namespace WarZLocal_Admin
         public Form1()
         {
             InitializeComponent();
-        }
+        }  
 
         private Dictionary<int, Items> itemsDB = new Dictionary<int, Items>();
         private Size currentRes = new Size(128, 128);
@@ -29,12 +29,14 @@ namespace WarZLocal_Admin
             listView2.Clear();
             imageList2.ImageSize = currentRes;
             imageList2.Images.Clear();
-            imageList2.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile("D:/Server/Open-WarZ/source/bin/Data/Weapons/no_icon.png"), currentRes));
+            imageList2.Images.Add(ImageUtilities.getThumb(Properties.Resources.no_icon, currentRes));
 
             loadingCircle1.Visible = true;
             loadingCircle1.Start();
 
-            using (XmlReader reader = XmlReader.Create(@"D:\Server\Open-WarZ\source\bin\Data\Weapons\itemsDB.xml"))
+            Console.WriteLine(Properties.Settings.Default.itemsDBFile);
+
+            using (XmlReader reader = XmlReader.Create(Properties.Settings.Default.itemsDBFile))
             {
                 Items i;
 
@@ -81,7 +83,7 @@ namespace WarZLocal_Admin
                                 itemsDB.Add(i.itemID, i);
                                 string icon = i.image;
 
-                                icon = icon.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
+                                icon = icon.Replace("$Data", Properties.Settings.Default.dataFolder);
                                 icon = icon.Replace(".dds", ".png");
                                 //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
 
@@ -106,7 +108,7 @@ namespace WarZLocal_Admin
                 }
             }
 
-            using (XmlReader reader = XmlReader.Create(@"D:\Server\Open-WarZ\source\bin\Data\Weapons\shopDB.xml"))
+            using (XmlReader reader = XmlReader.Create(Properties.Settings.Default.shopDBFile))
             {
                 while (reader.Read())
                 {
@@ -141,7 +143,7 @@ namespace WarZLocal_Admin
             panel1.Visible = false;
             imageList2.ImageSize = currentRes;
             imageList2.Images.Clear();
-            imageList2.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile("D:/Server/Open-WarZ/source/bin/Data/Weapons/no_icon.png"), currentRes));
+            imageList2.Images.Add(ImageUtilities.getThumb(Properties.Resources.no_icon, currentRes));
             listView2.Clear();
 
             List<ListViewItem> lvil = new List<ListViewItem>();
@@ -209,7 +211,7 @@ namespace WarZLocal_Admin
                                 if (!string.IsNullOrEmpty(compareString))
                                     checkForText =
                                         File.Exists(
-                                            i.Value.image.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data")
+                                            i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder)
                                                 .Replace(".dds", ".png"));
                                 else
                                 {
@@ -221,7 +223,7 @@ namespace WarZLocal_Admin
                                 if (!string.IsNullOrEmpty(compareString))
                                     checkForText =
                                         !File.Exists(
-                                            i.Value.image.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data")
+                                            i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder)
                                                 .Replace(".dds", ".png"));
                                 else
                                 {
@@ -298,7 +300,7 @@ namespace WarZLocal_Admin
                 }
                 if (checkForText && i.Value.internalCategory == comboBox1.SelectedIndex)
                 {
-                    string img = i.Value.image.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
+                    string img = i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder);
                     img = img.Replace(".dds", ".png");
                     //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
 
@@ -331,7 +333,7 @@ namespace WarZLocal_Admin
             listView1.Clear();
             imageList1.ImageSize = currentRes2;
             imageList1.Images.Clear();
-            imageList1.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile("D:/Server/Open-WarZ/source/bin/Data/Weapons/no_icon.png"), currentRes2));
+            imageList1.Images.Add(ImageUtilities.getThumb(Properties.Resources.no_icon, currentRes2));
 
             List<ListViewItem> lvil = new List<ListViewItem>();
 
@@ -345,7 +347,7 @@ namespace WarZLocal_Admin
                         continue;
                     //if (tabControl1.SelectedIndex == 1)
                         i.Value.binding = listView1.Items.Count;
-                    string img = i.Value.image.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
+                    string img = i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder);
                     img = img.Replace(".dds", ".png");
                     //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
 
@@ -369,7 +371,7 @@ namespace WarZLocal_Admin
             }));
             td.Start();
 
-            /*using (XmlReader reader = XmlReader.Create(@"D:\Server\Open-WarZ\source\bin\Data\Weapons\shopDB.xml"))
+            /*using (XmlReader reader = XmlReader.Create(Properties.Settings.Default.shopDBFile))
             {
                 while (reader.Read())
                 {
@@ -401,7 +403,7 @@ namespace WarZLocal_Admin
                                 
                             if(tabControl1.SelectedIndex == 1)
                                 i.binding = listView1.Items.Count;
-                            string img = i.image.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
+                            string img = i.image.Replace("$Data", Properties.Settings.Default.dataFolder);
                             img = img.Replace(".dds", ".png");
                             //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
 
@@ -498,13 +500,13 @@ namespace WarZLocal_Admin
                             label4.Visible = true;
                             label7.Visible = true;
                         }
-                        string img = i.Value.image.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
+                        string img = i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder);
                         img = img.Replace(".dds", ".png");
                         if (File.Exists(img))
                             pictureBox1.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
                                 new Size(128, 128));
                         else
-                            pictureBox1.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile("D:/Server/Open-WarZ/source/bin/Data/Weapons/no_icon.png"), new Size(128, 128));
+                            pictureBox1.Image = ImageUtilities.getThumb(Properties.Resources.no_icon, new Size(128, 128));
 
                         label1.Text = i.Value.desc;
                         label5.Text = i.Value.name + " (" + i.Value.itemID + ")";
@@ -519,7 +521,7 @@ namespace WarZLocal_Admin
             else
             {
                 panel1.Visible = false;
-                pictureBox1.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile("D:/Server/Open-WarZ/source/bin/Data/Weapons/no_icon.png"), new Size(128, 128));
+                pictureBox1.Image = ImageUtilities.getThumb(Properties.Resources.no_icon, new Size(128, 128));
             }
         }
 
@@ -682,6 +684,12 @@ namespace WarZLocal_Admin
                 writer.WriteEndElement();
                 writer.Close();
             }
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings s = new Settings();
+            s.ShowDialog();
         }
     }
 }

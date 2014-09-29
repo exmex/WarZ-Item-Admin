@@ -22,5 +22,32 @@ namespace WarZLocal_Admin.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Server\\Open-WarZ\\source\\bin\\Data")]
+        public string dataFolder {
+            get {
+                return ((string)(this["dataFolder"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Server\\Open-WarZ\\source\\bin\\Data\\Weapons\\itemsDB.xml\t")]
+        public string itemsDBFile {
+            get {
+                return ((string)(this["itemsDBFile"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Server\\Open-WarZ\\source\\bin\\Data\\Weapons\\shopDB.xml\t")]
+        public string shopDBFile {
+            get {
+                return ((string)(this["shopDBFile"]));
+            }
+        }
     }
 }

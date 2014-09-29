@@ -202,13 +202,13 @@ namespace WarZLocal_Admin
 
                 if (iv.Key == "image")
                 {
-                    string img = iv.Value.Replace("$Data", "D:/Server/Open-WarZ/source/bin/Data");
+                    string img = iv.Value.Replace("$Data", Properties.Settings.Default.dataFolder);
                     img = img.Replace(".dds", ".png");
                     if (File.Exists(img))
                         pb.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
                             new Size(128, 128));
                     else
-                        pb.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile("D:/Server/Open-WarZ/source/bin/Data/Weapons/no_icon.png"), new Size(128, 128));
+                        pb.Image = ImageUtilities.getThumb(Properties.Resources.no_icon, new Size(128, 128));
                 }
 
                 /*

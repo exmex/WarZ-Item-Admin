@@ -7,7 +7,7 @@ namespace WarZLocal_Admin
 {
     public partial class EditItem : Form
     {
-        public static string dataFolder = "D:/Server/Open-WarZ/source/bin/Data";
+        public static string dataFolder = Properties.Settings.Default.dataFolder;
 
         public Items buffer;
 

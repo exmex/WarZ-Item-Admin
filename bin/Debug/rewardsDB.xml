@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<rewards>
+	<rwd ID="1" Name="Zombie Reward" GD_SOFT="10" XP_SOFT="150" GD_HARD="20" XP_HARD="300" />
+	<!--<rwd ID=\"".$gr['ID']."\" Name=\"".$gr['Name']."\" GD_SOFT=\"".$gr['GD_SOFT']."\" XP_SOFT=\"".$gr['XP_SOFT']."\" GD_HARD=\"".$gr['GD_HARD']."\" XP_HARD=\"".$gr['XP_HARD']."\" />-->
+</rewards>
