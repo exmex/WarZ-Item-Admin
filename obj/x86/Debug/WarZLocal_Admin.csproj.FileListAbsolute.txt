@@ -1,0 +1,10 @@
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\bin\Debug\WarZLocal_Admin.exe
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\bin\Debug\WarZLocal_Admin.pdb
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\obj\x86\Debug\WarZLocal_Admin.csprojResolveAssemblyReference.cache
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\obj\x86\Debug\WarZLocal_Admin.Form1.resources
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\obj\x86\Debug\WarZLocal_Admin.Properties.Resources.resources
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\obj\x86\Debug\WarZLocal_Admin.csproj.GenerateResource.Cache
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\obj\x86\Debug\WarZLocal_Admin.exe
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\obj\x86\Debug\WarZLocal_Admin.pdb
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\bin\Debug\WarZLocal_Admin.exe.config
+C:\Users\gooman\Documents\Visual Studio 2010\Projects\WarZLocal_Admin\WarZLocal_Admin\obj\x86\Debug\WarZLocal_Admin.EditItem.resources
