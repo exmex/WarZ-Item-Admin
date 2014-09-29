@@ -354,7 +354,7 @@ namespace WarZLocal_Admin
 
                     if (File.Exists(img))
                         imageList1.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
-                            currentRes));
+                            currentRes2));
                     else
                         lvi.ImageIndex = 0;
                     //listView1.Items.Add(lvi);
