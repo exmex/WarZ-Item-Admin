@@ -31,6 +31,9 @@ namespace WarZLocal_Admin
             imageList2.Images.Clear();
             imageList2.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile("D:/Server/Open-WarZ/source/bin/Data/Weapons/no_icon.png"), currentRes));
 
+            loadingCircle1.Visible = true;
+            loadingCircle1.Start();
+
             using (XmlReader reader = XmlReader.Create(@"D:\Server\Open-WarZ\source\bin\Data\Weapons\itemsDB.xml"))
             {
                 Items i;
@@ -125,14 +128,15 @@ namespace WarZLocal_Admin
                     }
                 }
             }
+
+            loadingCircle1.Stop();
+            loadingCircle1.Visible = false;
         }
 
         public void LoadItemsDB()
         {
-            foreach (KeyValuePair<int, Items> i in itemsDB)
-            {
-                i.Value.binding = -1;
-            }
+            loadingCircle1.Visible = true;
+            loadingCircle1.Start();
 
             panel1.Visible = false;
             imageList2.ImageSize = currentRes;
@@ -144,6 +148,8 @@ namespace WarZLocal_Admin
 
             foreach (KeyValuePair<int, Items> i in itemsDB)
             {
+                i.Value.binding = -1;
+
                 bool checkForText = true;
                 if (textBox1.Text != "")
                 {
@@ -312,10 +318,15 @@ namespace WarZLocal_Admin
                 }
             }
             listView2.Items.AddRange(lvil.ToArray());
+            loadingCircle1.Visible = false;
+            loadingCircle1.Stop();
         }
 
         public void LoadShopXML()
         {
+            loadingCircle1.Visible = true;
+            loadingCircle1.Start();
+
             panel1.Visible = false;
             listView1.Clear();
             imageList1.ImageSize = currentRes2;
@@ -350,6 +361,11 @@ namespace WarZLocal_Admin
                     lvil.Add(lvi);
                 }
                 listView1.Invoke((MethodInvoker)(() => listView1.Items.AddRange(lvil.ToArray())));
+                loadingCircle1.Invoke((MethodInvoker)(() =>
+                {
+                       loadingCircle1.Visible = false;
+                        loadingCircle1.Stop();
+                }));
             }));
             td.Start();
 

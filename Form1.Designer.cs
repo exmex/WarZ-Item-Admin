@@ -61,6 +61,7 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.loadingCircle1 = new WarZLocal_Admin.LoadingCircle(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -409,11 +410,28 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // loadingCircle1
+            // 
+            this.loadingCircle1.BackColor = System.Drawing.Color.White;
+            this.loadingCircle1.InnerCircleRadius = 25;
+            this.loadingCircle1.LineWidth = 3;
+            this.loadingCircle1.Location = new System.Drawing.Point(325, 290);
+            this.loadingCircle1.Name = "loadingCircle1";
+            this.loadingCircle1.OutnerCircleRadius = 10;
+            this.loadingCircle1.Size = new System.Drawing.Size(64, 64);
+            this.loadingCircle1.Speed = 100;
+            this.loadingCircle1.SpokesMember = 12;
+            this.loadingCircle1.TabIndex = 4;
+            this.loadingCircle1.Text = "loadingCircle1";
+            this.loadingCircle1.ThemeColor = System.Drawing.Color.DodgerBlue;
+            this.loadingCircle1.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 595);
+            this.Controls.Add(this.loadingCircle1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tabControl1);
@@ -477,6 +495,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private LoadingCircle loadingCircle1;
     }
 }
 

@@ -26,7 +26,8 @@ namespace WarZLocal_Admin
         set
         {
             _speed = value;
-            _timer.Interval = _speed;
+            if(_timer != null)
+                _timer.Interval = _speed;
         }
     }
     public int SpokesMember
@@ -88,6 +89,16 @@ namespace WarZLocal_Admin
         container.Add(this);
 
         InitializeComponent();
+
+        SetStyle(ControlStyles.UserPaint, true);
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+        SetStyle(ControlStyles.ResizeRedraw, true);
+        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+
+        _timer = new Timer();
+        _timer.Tick += _Timer_Tick;
+        _timer.Interval = _speed;
+        _colors = GetColors(_themeColor, _numberOfSpoke, _isLoading);
     }
 
     public LoadingCircle()
@@ -102,7 +113,6 @@ namespace WarZLocal_Admin
         _timer.Tick += _Timer_Tick;
         _timer.Interval = _speed;
         _colors = GetColors(_themeColor, _numberOfSpoke, _isLoading);
-
     }
 
     protected override void OnPaint(PaintEventArgs pe)
