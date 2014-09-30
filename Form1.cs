@@ -28,6 +28,7 @@ namespace WarZLocal_Admin
         private Dictionary<int, Weapon> weapons = new Dictionary<int, Weapon>();
 
         private SQLiteConnection db;
+        private Thread temp_thread;
 
         private Size currentRes = new Size(128, 128);
         private Size currentRes2 = new Size(128, 128);
@@ -673,7 +674,7 @@ namespace WarZLocal_Admin
             lb.SizeChanged += (EventHandler)((s, ev) => { lb.Location = new Point((Size.Width / 2) - (lb.Size.Width/2) - 20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2)); });
             lb.Location = new Point((Size.Width / 2) - (lb.Size.Width /2)-20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2));
 
-            Thread td = new Thread((() =>
+            temp_thread = new Thread((() =>
             {
                 Invoke((MethodInvoker)(() =>
                 {
@@ -836,9 +837,17 @@ namespace WarZLocal_Admin
                 Invoke((MethodInvoker)(() =>
                 {
                     Controls.Remove(tp);
+                    Controls.Remove(lc);
+                    Controls.Remove(lb);
                 }));
             }));
-            td.Start();
+            temp_thread.Start();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(temp_thread != null && temp_thread.ThreadState == ThreadState.Running)
+                temp_thread.Abort();
         }
     }
 }
