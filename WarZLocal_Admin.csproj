@@ -103,6 +103,14 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="SQLite.cs" />
+    <Compile Include="SQLiteAsync.cs" />
+    <Compile Include="TransparentPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TransparentPanel.Designer.cs">
+      <DependentUpon>TransparentPanel.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="EditItem.resx">
       <DependentUpon>EditItem.cs</DependentUpon>
     </EmbeddedResource>

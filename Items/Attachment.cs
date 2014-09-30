@@ -1,22 +1,63 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Xml;
+using SQLite;
 
 namespace WarZLocal_Admin
 {
     class Attachment
     {
-        public static Items readXML(XmlReader reader)
+        public int ItemID { get; set; }
+        [MaxLength(32)]
+        public string FNAME { get; set; }
+        public int Type { get; set; }
+        [MaxLength(32)]
+        public string Name { get; set; }
+        [MaxLength(256)]
+        public string Description { get; set; }
+        [MaxLength(64)]
+        public string MuzzleParticle { get; set; }
+        [MaxLength(256)]
+        public string FireSound { get; set; }
+        public float Damage { get; set; }
+        public float Range { get; set; }
+        public float Firerate { get; set; }
+        public float Recoil { get; set; }
+        public float Spread { get; set; }
+        public int Clipsize { get; set; }
+        public float ScopeMag { get; set; }
+        [MaxLength(32)]
+        public string ScopeType { get; set; }
+        [MaxLength(32)]
+        public string AnimPrefix { get; set; }
+        public int SpecID { get; set; }
+        public int Category { get; set; }
+
+        public int Price1 { get; set; }
+        public int Price7 { get; set; }
+        public int Price30 { get; set; }
+        public int PriceP { get; set; }
+
+        public int GPrice1 { get; set; }
+        public int GPrice7 { get; set; }
+        public int GPrice30 { get; set; }
+        public int GPriceP { get; set; }
+
+        public int IsNew { get; set; }
+        public int LevelRequired { get; set; }
+        public int Weight { get; set; }
+
+        public static Attachment readXML(XmlReader reader)
         {
-            Items i = new Items();
+            Attachment i = new Attachment();
+            i.ItemID = Helper.getInt(reader.GetAttribute(0));
+            i.Category = Helper.getInt(reader.GetAttribute(1));
+            //i.internalCategory = 2;
 
-            i.itemID = Helper.getInt(reader.GetAttribute(0));
-            i.category = Helper.getInt(reader.GetAttribute(1));
-            i.internalCategory = 2;
-
-            i.attachType = Helper.getInt(reader.GetAttribute(2));
+            i.Type = Helper.getInt(reader.GetAttribute(2));
             i.SpecID = Helper.getInt(reader.GetAttribute(3));
 
-            i.weight = Helper.getInt(reader.GetAttribute(4));
+            i.Weight = Helper.getInt(reader.GetAttribute(4));
 
             XmlReader subs = reader.ReadSubtree();
             while (subs.Read())
@@ -26,27 +67,27 @@ namespace WarZLocal_Admin
                 switch (subs.Name)
                 {
                     case "Model":
-                        i.modelFile = subs.GetAttribute(0);
-
+                        //i.modelFile = subs.GetAttribute(0);
+                        i.FNAME = Path.GetFileNameWithoutExtension(subs.GetAttribute(0));
                         i.MuzzleParticle = subs.GetAttribute(1);
                         i.FireSound = subs.GetAttribute(2);
-                        i.ScopeAnim = subs.GetAttribute(3);
+                        i.ScopeType = subs.GetAttribute(3);
                         break;
                     case "Store":
-                        i.name = subs.GetAttribute(0);
-                        i.image = subs.GetAttribute(1);
-                        i.desc = subs.GetAttribute(2);
-                        i.levelRequired = Helper.getInt(subs.GetAttribute(3));
+                        i.Name = subs.GetAttribute(0);
+                        //i.image = subs.GetAttribute(1);
+                        i.Description = subs.GetAttribute(2);
+                        i.LevelRequired = Helper.getInt(subs.GetAttribute(3));
                         break;
                     case "Upgrade":
-                        i.upgradeDamage = Helper.getInt(subs.GetAttribute(0));
-                        i.upgradeRange = Helper.getInt(subs.GetAttribute(1));
-                        i.upgradeFirerate = Helper.getInt(subs.GetAttribute(2));
-                        i.upgradeRecoil = Helper.getInt(subs.GetAttribute(3));
-                        i.upgradeSpread = Helper.getInt(subs.GetAttribute(4));
-                        i.upgradeClipsize = Helper.getInt(subs.GetAttribute(5));
-                        i.upgradeScopeMag = Helper.getInt(subs.GetAttribute(6));
-                        i.upgradeScopeType = subs.GetAttribute(7);
+                        i.Damage = Helper.getInt(subs.GetAttribute(0));
+                        i.Range = Helper.getInt(subs.GetAttribute(1));
+                        i.Firerate = Helper.getInt(subs.GetAttribute(2));
+                        i.Recoil = Helper.getInt(subs.GetAttribute(3));
+                        i.Spread = Helper.getInt(subs.GetAttribute(4));
+                        i.Clipsize = Helper.getInt(subs.GetAttribute(5));
+                        i.ScopeMag = Helper.getInt(subs.GetAttribute(6));
+                        i.ScopeType = subs.GetAttribute(7);
                         break;
                 }
 

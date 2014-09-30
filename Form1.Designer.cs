@@ -41,6 +41,8 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.listView2 = new System.Windows.Forms.ListView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -53,16 +55,15 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadingCircle1 = new WarZLocal_Admin.LoadingCircle(this.components);
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.importItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadingCircle1 = new WarZLocal_Admin.LoadingCircle(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -76,9 +77,9 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // listView1
@@ -216,6 +217,22 @@
             this.contextMenuStrip1.Text = "Item";
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Image = global::WarZLocal_Admin.Properties.Resources.pencil;
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
+            this.toolStripMenuItem1.Text = "Edit Item";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Image = global::WarZLocal_Admin.Properties.Resources.cross;
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(121, 22);
+            this.toolStripMenuItem2.Text = "Delete";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
             // imageList2
             // 
             this.imageList2.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
@@ -346,6 +363,16 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Location = new System.Drawing.Point(99, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -356,15 +383,12 @@
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // errorProvider1
-            // 
-            this.errorProvider1.ContainerControl = this;
-            // 
             // toolStripDropDownButton1
             // 
             this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveToolStripMenuItem,
+            this.importItemsToolStripMenuItem,
             this.settingsToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
@@ -376,41 +400,33 @@
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
-            // pictureBox1
+            // errorProvider1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Location = new System.Drawing.Point(99, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.errorProvider1.ContainerControl = this;
             // 
-            // toolStripMenuItem1
+            // importItemsToolStripMenuItem
             // 
-            this.toolStripMenuItem1.Image = global::WarZLocal_Admin.Properties.Resources.pencil;
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(121, 22);
-            this.toolStripMenuItem1.Text = "Edit Item";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Image = global::WarZLocal_Admin.Properties.Resources.cross;
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(121, 22);
-            this.toolStripMenuItem2.Text = "Delete";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.importItemsToolStripMenuItem.Name = "importItemsToolStripMenuItem";
+            this.importItemsToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.importItemsToolStripMenuItem.Text = "Import Items";
+            this.importItemsToolStripMenuItem.Click += new System.EventHandler(this.importItemsToolStripMenuItem_Click);
             // 
             // loadingCircle1
             // 
@@ -427,13 +443,6 @@
             this.loadingCircle1.Text = "loadingCircle1";
             this.loadingCircle1.ThemeColor = System.Drawing.Color.DodgerBlue;
             this.loadingCircle1.Visible = false;
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -462,10 +471,10 @@
             this.splitContainer2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -506,6 +515,7 @@
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private LoadingCircle loadingCircle1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importItemsToolStripMenuItem;
     }
 }
 

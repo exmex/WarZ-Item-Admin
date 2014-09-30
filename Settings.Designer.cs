@@ -39,20 +39,13 @@
             this.label4 = new System.Windows.Forms.Label();
             this.loadingCircle1 = new WarZLocal_Admin.LoadingCircle(this.components);
             this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -103,14 +96,8 @@
             this.quickConfig.Controls.Add(this.label4);
             this.quickConfig.Controls.Add(this.loadingCircle1);
             this.quickConfig.Controls.Add(this.button6);
-            this.quickConfig.Controls.Add(this.button5);
-            this.quickConfig.Controls.Add(this.button4);
             this.quickConfig.Controls.Add(this.button3);
-            this.quickConfig.Controls.Add(this.label3);
-            this.quickConfig.Controls.Add(this.label2);
             this.quickConfig.Controls.Add(this.label1);
-            this.quickConfig.Controls.Add(this.textBox3);
-            this.quickConfig.Controls.Add(this.textBox2);
             this.quickConfig.Controls.Add(this.textBox1);
             this.quickConfig.Dock = System.Windows.Forms.DockStyle.Fill;
             this.quickConfig.Location = new System.Drawing.Point(0, 0);
@@ -121,7 +108,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(213, 266);
+            this.label4.Location = new System.Drawing.Point(213, 162);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 13);
             this.label4.TabIndex = 5;
@@ -132,7 +119,7 @@
             // 
             this.loadingCircle1.InnerCircleRadius = 10;
             this.loadingCircle1.LineWidth = 3;
-            this.loadingCircle1.Location = new System.Drawing.Point(197, 199);
+            this.loadingCircle1.Location = new System.Drawing.Point(197, 95);
             this.loadingCircle1.Name = "loadingCircle1";
             this.loadingCircle1.OutnerCircleRadius = 30;
             this.loadingCircle1.Size = new System.Drawing.Size(64, 64);
@@ -152,26 +139,6 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(488, 106);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(32, 23);
-            this.button5.TabIndex = 2;
-            this.button5.Text = "...";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(488, 80);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(32, 23);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "...";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(488, 22);
@@ -182,24 +149,6 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 111);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(110, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "shopDB.xml Location:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 85);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(112, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "ItemsDB.xml Location:";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -208,20 +157,6 @@
             this.label1.Size = new System.Drawing.Size(65, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Data Folder:";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(134, 108);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(348, 20);
-            this.textBox3.TabIndex = 0;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(134, 82);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(348, 20);
-            this.textBox2.TabIndex = 0;
             // 
             // textBox1
             // 
@@ -272,12 +207,6 @@
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.DefaultExt = "xml";
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "XML File|*.xml";
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -314,20 +243,13 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.Panel quickConfig;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Label label4;
         private LoadingCircle loadingCircle1;

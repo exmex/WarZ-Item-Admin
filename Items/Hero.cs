@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 namespace WarZLocal_Admin
@@ -23,6 +24,7 @@ namespace WarZLocal_Admin
                 {
                     case "Model":
                         i.modelFile = subs.GetAttribute(0);
+                        i.fname = Path.GetFileNameWithoutExtension(i.modelFile);
                         break;
                     case "Store":
                         i.name = subs.GetAttribute(0);

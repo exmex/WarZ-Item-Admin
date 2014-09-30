@@ -1,10 +1,103 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Xml;
+using SQLite;
 
 namespace WarZLocal_Admin
 {
     class Weapon
     {
+        public int ItemID { get; set; }
+        [MaxLength(32)]
+        public string FNAME { get; set; }
+        public int Category { get; set; }
+        [MaxLength(32)]
+        public string Name { get; set; }
+        [MaxLength(256)]
+        public string Description { get; set; }
+        [MaxLength(32)]
+        public string MuzzleOffset { get; set; }
+        [MaxLength(32)]
+        public string MuzzleParticle { get; set; }
+        [MaxLength(32)]
+        public string Animation { get; set; }
+        public float BulletID { get; set; }
+        [MaxLength(255)]
+        public string Sound_Shot { get; set; }
+        [MaxLength(255)]
+        public string Sound_Reload { get; set; }
+        public float Damage { get; set; }
+        public int isImmediate { get; set; }
+        public float Mass { get; set; }
+        public float Speed { get; set; }
+        public float DamageDecay { get; set; }
+        public float Area { get; set; }
+        public float Delay { get; set; }
+        public float Timeout { get; set; }
+        public int NumClips { get; set; }
+        public int Clipsize { get; set; }
+        public float ReloadTime { get; set; }
+        public float ActiveReloadTick { get; set; }
+        public int RateOfFire { get; set; }
+        public float Spread { get; set; }
+        public float Recoil { get; set; }
+        public int NumGrenades { get; set; }
+        [MaxLength(32)]
+        public string GrenadeName { get; set; }
+        [MaxLength(3)]
+        public string Firemode { get; set; }
+        public int DetectionRadius { get; set; }
+        [MaxLength(32)]
+        public string ScopeType { get; set; }
+        public int ScopeZoom { get; set; }
+
+        public int Price1 { get; set; }
+        public int Price7 { get; set; }
+        public int Price30 { get; set; }
+        public int PriceP { get; set; }
+
+        public int IsNew { get; set; }
+        public int LevelRequired { get; set; }
+
+        public int GPrice1 { get; set; }
+        public int GPrice7 { get; set; }
+        public int GPrice30 { get; set; }
+        public int GPriceP { get; set; }
+
+
+        /* War Inc shit? */
+        public int ShotsFired { get; set; }
+        public int ShotsHits { get; set; }
+        public int KillsCQ { get; set; }
+        public int KillsDM { get; set; }
+        public int KillsSB { get; set; }
+        public int IsUpgradeable { get; set; }
+        /* --------------- */
+        public int IsFPS { get; set; }
+        public int FPSSpec0 { get; set; }
+        public int FPSSpec1 { get; set; }
+        public int FPSSpec2 { get; set; }
+        public int FPSSpec3 { get; set; }
+        public int FPSSpec4 { get; set; }
+        public int FPSSpec5 { get; set; }
+        public int FPSSpec6 { get; set; }
+        public int FPSSpec7 { get; set; }
+        public int FPSSpec8 { get; set; }
+
+        public int FPSAttach0 { get; set; }
+        public int FPSAttach1 { get; set; }
+        public int FPSAttach2 { get; set; }
+        public int FPSAttach3 { get; set; }
+        public int FPSAttach4 { get; set; }
+        public int FPSAttach5 { get; set; }
+        public int FPSAttach6 { get; set; }
+        public int FPSAttach7 { get; set; }
+        public int FPSAttach8 { get; set; }
+
+        [MaxLength(32)]
+        public string AnimPrefix { get; set; }
+        public int Weight { get; set; }
+
         /*
          <Weapon itemID="101002" category="20" upgrade="1" FNAME="ASR_M16" Weight="4000">
             <Model file="Data/ObjectsDepot/Weapons/ASR_M16.sco" AnimPrefix="ASR_M16" muzzlerOffset.x="0" muzzlerOffset.y="0" muzzlerOffset.z="0" />
@@ -19,16 +112,20 @@ namespace WarZLocal_Admin
         </Weapon>
          */
 
-        public static Items readXML(XmlReader reader)
+        public static Weapon readXML(XmlReader reader)
         {
-            Items i = new Items();
+            Weapon i = new Weapon();
 
-            i.itemID = Helper.getInt(reader.GetAttribute(0));
-            i.category = Helper.getInt(reader.GetAttribute(1));
-            i.internalCategory = 0;
-            i.upgrade = Helper.getInt(reader.GetAttribute(2));
-            i.fname = reader.GetAttribute(3);
-            i.weight = Helper.getInt(reader.GetAttribute(4));
+            i.ItemID = Helper.getInt(reader.GetAttribute(0));
+            i.Category = Helper.getInt(reader.GetAttribute(1));
+            //i.internalCategory = 0;
+            if (i.Category != 30)
+            {
+                i.IsUpgradeable = Helper.getInt(reader.GetAttribute(2));
+                i.FNAME = reader.GetAttribute(3);
+                i.Weight = Helper.getInt(reader.GetAttribute(4));
+            }else
+                i.Weight = Helper.getInt(reader.GetAttribute(2));
 
             XmlReader subs = reader.ReadSubtree();
             while (subs.Read())
@@ -38,77 +135,81 @@ namespace WarZLocal_Admin
                 switch (subs.Name)
                 {
                     case "Model":
-                        i.modelFile = subs.GetAttribute(0);
-                        i.muzzlerOffesetX = Helper.getInt(subs.GetAttribute(1));
-                        i.muzzlerOffesetY = Helper.getInt(subs.GetAttribute(2));
-                        i.muzzlerOffesetZ = Helper.getInt(subs.GetAttribute(3));
+                        //i.file = subs.GetAttribute(0);
+                        if (i.Category == 30)
+                            i.FNAME = Path.GetFileNameWithoutExtension(subs.GetAttribute(0));
+                        else
+                        {
+                            i.AnimPrefix = subs.GetAttribute(1);
+                            i.MuzzleOffset = subs.GetAttribute(2) + " " + subs.GetAttribute(3) + " " +
+                                             subs.GetAttribute(4);
+                        }
                         break;
                     case "MuzzleModel":
-                        i.muzzleModelFile = subs.GetAttribute(0);
+                        i.MuzzleParticle = subs.GetAttribute(0);
                         break;
                     case "HudIcon":
-                        i.hudIconFile = subs.GetAttribute(0);
+                        //i. = subs.GetAttribute(0);
                         break;
                     case "Store":
-                        i.name = subs.GetAttribute(0);
-                        i.image = subs.GetAttribute(1);
-                        i.desc = subs.GetAttribute(2);
-                        i.levelRequired = Helper.getInt(subs.GetAttribute(3));
+                        i.Name = subs.GetAttribute(0);
+                        //i.icon = subs.GetAttribute(1);
+                        i.Description = subs.GetAttribute(2);
+                        i.LevelRequired = Helper.getInt(subs.GetAttribute(3));
                         break;
                     case "PrimaryFire":
-                        i.bullet = Helper.getFloat(subs.GetAttribute(0));
-                        i.damage = Helper.getInt(subs.GetAttribute(1));
-                        i.immediate = (subs.GetAttribute(2).ToLower() == "true");
-                        i.mass = Helper.getInt(subs.GetAttribute(3));
-                        i.decay = Helper.getInt(subs.GetAttribute(4));
-                        i.speed = Helper.getInt(subs.GetAttribute(5));
-                        i.area = Helper.getInt(subs.GetAttribute(6));
-                        i.delay = Helper.getInt(subs.GetAttribute(7));
-                        i.numShells = Helper.getInt(subs.GetAttribute(8));
-                        i.clipSize = Helper.getInt(subs.GetAttribute(9));
-                        i.reloadTime = Helper.getFloat(subs.GetAttribute(10));
-                        i.activeReloadTick = Helper.getFloat(subs.GetAttribute(11));
-                        i.rateOfFire = Helper.getInt(subs.GetAttribute(12));
-                        i.spread = Helper.getInt(subs.GetAttribute(13));
-                        i.recoil = Helper.getInt(subs.GetAttribute(14));
-                        i.numgrenades = Helper.getInt(subs.GetAttribute(15));
-                        i.grenadename = subs.GetAttribute(16);
-                        i.firemode = Helper.getInt(subs.GetAttribute(17));
+                        i.BulletID = Helper.getFloat(subs.GetAttribute(0));
+                        i.Damage = Helper.getInt(subs.GetAttribute(1));
+                        i.isImmediate = (subs.GetAttribute(2).ToLower() == "true") ? 1 : 0;
+                        i.Mass = Helper.getFloat(subs.GetAttribute(3));
+                        i.DamageDecay = Helper.getFloat(subs.GetAttribute(4));
+                        i.Speed = Helper.getFloat(subs.GetAttribute(5));
+                        i.Area = Helper.getFloat(subs.GetAttribute(6));
+                        i.Delay = Helper.getFloat(subs.GetAttribute(7));
+                        i.NumClips = Helper.getInt(subs.GetAttribute(8));
+                        i.Clipsize = Helper.getInt(subs.GetAttribute(9));
+                        i.ReloadTime = Helper.getFloat(subs.GetAttribute(10));
+                        i.ActiveReloadTick = Helper.getFloat(subs.GetAttribute(11));
+                        i.RateOfFire = Helper.getInt(subs.GetAttribute(12));
+                        i.Spread = Helper.getFloat(subs.GetAttribute(13));
+                        i.Recoil = Helper.getFloat(subs.GetAttribute(14));
+                        i.NumGrenades = Helper.getInt(subs.GetAttribute(15));
+                        i.GrenadeName = subs.GetAttribute(16);
+                        i.Firemode = subs.GetAttribute(17);
                         i.ScopeType = subs.GetAttribute(18);
                         i.ScopeZoom = Helper.getInt(subs.GetAttribute(19));
                         break;
                     case "Animation":
-                        i.type = subs.GetAttribute(0);
+                        i.Animation = subs.GetAttribute(0);
                         break;
                     case "Sound":
-                        i.shoot = subs.GetAttribute(0);
-                        i.reload = subs.GetAttribute(1);
+                        i.Sound_Shot = subs.GetAttribute(0);
+                        i.Sound_Reload = subs.GetAttribute(1);
                         break;
                     case "FPS":
                         i.IsFPS = Helper.getInt(subs.GetAttribute(0));
-                        i.i0 = Helper.getInt(subs.GetAttribute(1));
-                        i.i1 = Helper.getInt(subs.GetAttribute(2));
-                        i.i2 = Helper.getInt(subs.GetAttribute(3));
-                        i.i3 = Helper.getInt(subs.GetAttribute(4));
-                        i.i4 = Helper.getInt(subs.GetAttribute(5));
-                        i.i5 = Helper.getInt(subs.GetAttribute(6));
-                        i.i6 = Helper.getInt(subs.GetAttribute(7));
-                        i.i7 = Helper.getInt(subs.GetAttribute(8));
-                        i.i8 = Helper.getInt(subs.GetAttribute(9));
+                        i.FPSAttach0 = Helper.getInt(subs.GetAttribute(1));
+                        i.FPSAttach1 = Helper.getInt(subs.GetAttribute(2));
+                        i.FPSAttach2 = Helper.getInt(subs.GetAttribute(3));
+                        i.FPSAttach3 = Helper.getInt(subs.GetAttribute(4));
+                        i.FPSAttach4 = Helper.getInt(subs.GetAttribute(5));
+                        i.FPSAttach5 = Helper.getInt(subs.GetAttribute(6));
+                        i.FPSAttach6 = Helper.getInt(subs.GetAttribute(7));
+                        i.FPSAttach7 = Helper.getInt(subs.GetAttribute(8));
+                        i.FPSAttach8 = Helper.getInt(subs.GetAttribute(9));
 
-                        i.d0 = Helper.getInt(subs.GetAttribute(10));
-                        i.d1 = Helper.getInt(subs.GetAttribute(11));
-                        i.d2 = Helper.getInt(subs.GetAttribute(12));
-                        i.d3 = Helper.getInt(subs.GetAttribute(13));
-                        i.d4 = Helper.getInt(subs.GetAttribute(14));
-                        i.d5 = Helper.getInt(subs.GetAttribute(15));
-                        i.d6 = Helper.getInt(subs.GetAttribute(16));
-                        i.d7 = Helper.getInt(subs.GetAttribute(17));
-                        i.d8 = Helper.getInt(subs.GetAttribute(18));
+                        i.FPSSpec0 = Helper.getInt(subs.GetAttribute(10));
+                        i.FPSSpec1 = Helper.getInt(subs.GetAttribute(11));
+                        i.FPSSpec2 = Helper.getInt(subs.GetAttribute(12));
+                        i.FPSSpec3 = Helper.getInt(subs.GetAttribute(13));
+                        i.FPSSpec4 = Helper.getInt(subs.GetAttribute(14));
+                        i.FPSSpec5 = Helper.getInt(subs.GetAttribute(15));
+                        i.FPSSpec6 = Helper.getInt(subs.GetAttribute(16));
+                        i.FPSSpec7 = Helper.getInt(subs.GetAttribute(17));
+                        i.FPSSpec8 = Helper.getInt(subs.GetAttribute(18));
 
                         break;
                 }
-
             }
             return i;
         }

@@ -30,8 +30,6 @@ namespace WarZLocal_Admin
             //folderBrowserDialog1.SelectedPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Arktos Entertainment Group\WarZ", "Installed", null);
 
             textBox1.Text = Properties.Settings.Default.dataFolder;
-            textBox2.Text = Properties.Settings.Default.itemsDBFile;
-            textBox3.Text = Properties.Settings.Default.shopDBFile;
 
             folderBrowserDialog1.SelectedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string pathing = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Data";
@@ -41,7 +39,7 @@ namespace WarZLocal_Admin
                 {
                     FileInfo fINfo = new FileInfo(pathing + ".zip");
                     Console.WriteLine(fINfo.Length);
-                    if (fINfo.Length >= 49969215)
+                    if (fINfo.Length >= 51699554)
                     {
                         button6.Visible = false;
                     }
@@ -67,24 +65,6 @@ namespace WarZLocal_Admin
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 textBox1.Text = folderBrowserDialog1.SelectedPath;
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.Filter = "ItemsDB|itemsDB.xml";
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                textBox2.Text = openFileDialog1.FileName;
-            }
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.Filter = "ShopDB|shopDB.xml";
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                textBox3.Text = openFileDialog1.FileName;
             }
         }
 
@@ -203,8 +183,6 @@ namespace WarZLocal_Admin
         private void button2_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.dataFolder = textBox1.Text;
-            Properties.Settings.Default.itemsDBFile = textBox2.Text;
-            Properties.Settings.Default.shopDBFile = textBox3.Text;
             Properties.Settings.Default.Save();
 
             DialogResult = DialogResult.OK;

@@ -11,5 +11,8 @@
     <Setting Name="shopDBFile" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Server\Open-WarZ\source\bin\Data\Weapons\shopDB.xml	</Value>
     </Setting>
+    <Setting Name="itemEditDisplay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,18 +1,43 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Xml;
+using SQLite;
 
 namespace WarZLocal_Admin
 {
     class Generic
     {
-        public static Items readXML(XmlReader reader)
-        {
-            Items i = new Items();
+        public int ItemID { get; set; }
+        [MaxLength(32)]
+        public string FNAME { get; set; }
+        public int Category { get; set; }
+        [MaxLength(32)]
+        public string Name { get; set; }
+        [MaxLength(512)]
+        public string Description { get; set; }
 
-            i.itemID = Helper.getInt(reader.GetAttribute(0));
-            i.category = Helper.getInt(reader.GetAttribute(1));
-            i.internalCategory = 4;
-            i.weight = Helper.getInt(reader.GetAttribute(2));
+        public int Price1 { get; set; }
+        public int Price7 { get; set; }
+        public int Price30 { get; set; }
+        public int PriceP { get; set; }
+
+        public int IsNew { get; set; }
+        public int LevelRequired { get; set; }
+
+        public int GPrice1 { get; set; }
+        public int GPrice7 { get; set; }
+        public int GPrice30 { get; set; }
+        public int GPriceP { get; set; }
+        public int Weight { get; set; }
+
+        public static Generic readXML(XmlReader reader)
+        {
+            Generic i = new Generic();
+
+            i.ItemID = Helper.getInt(reader.GetAttribute(0));
+            i.Category = Helper.getInt(reader.GetAttribute(1));
+            //i.internalCategory = 4;
+            i.Weight = Helper.getInt(reader.GetAttribute(2));
 
             XmlReader subs = reader.ReadSubtree();
             while (subs.Read())
@@ -22,10 +47,11 @@ namespace WarZLocal_Admin
                 switch (subs.Name)
                 {
                     case "Store":
-                        i.name = subs.GetAttribute(0);
-                        i.image = subs.GetAttribute(1);
-                        i.desc = subs.GetAttribute(2);
-                        i.levelRequired = Helper.getInt(subs.GetAttribute(3));
+                        i.Name = subs.GetAttribute(0);
+                        //i.image = subs.GetAttribute(1);
+                        i.FNAME = Path.GetFileNameWithoutExtension(subs.GetAttribute(1));
+                        i.Description = subs.GetAttribute(2);
+                        i.LevelRequired = Helper.getInt(subs.GetAttribute(3));
                         break;
                 }
 

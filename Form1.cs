@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using SQLite;
 using WarZLocal_Admin.Properties;
 
 namespace WarZLocal_Admin
@@ -16,9 +18,17 @@ namespace WarZLocal_Admin
         public Form1()
         {
             InitializeComponent();
-        }  
+        }
 
         private Dictionary<int, Items> itemsDB = new Dictionary<int, Items>();
+
+        private Dictionary<int, Attachment> attachments = new Dictionary<int, Attachment>();
+        private Dictionary<int, Gear> gears = new Dictionary<int, Gear>();
+        private Dictionary<int, Generic> generics = new Dictionary<int, Generic>();
+        private Dictionary<int, Weapon> weapons = new Dictionary<int, Weapon>();
+
+        private SQLiteConnection db;
+
         private Size currentRes = new Size(128, 128);
         private Size currentRes2 = new Size(128, 128);
         private void Form1_Load(object sender, EventArgs e)
@@ -35,77 +45,12 @@ namespace WarZLocal_Admin
             loadingCircle1.Visible = true;
             loadingCircle1.Start();
 
-            using (XmlReader reader = XmlReader.Create(Properties.Settings.Default.itemsDBFile))
-            {
-                Items i;
-
-                try
-                {
-                    while (reader.Read())
-                    {
-                        switch (reader.Name)
-                        {
-                            default:
-                                continue;
-                            case "Attachment":
-                                i = Attachment.readXML(reader);
-                                itemsDB.Add(i.itemID, i);
-                                break;
-                            case "Backpack":
-                                i = Backpack.readXML(reader);
-                                itemsDB.Add(i.itemID, i);
-                                break;
-                            case "Item":
-                                // Hack because of several items.
-                                // 1 - Generic
-                                // 30 - Food
-                                i = Helper.getInt(reader.GetAttribute(1)) == 1 ? Generic.readXML(reader) : Food.readXML(reader);
-                                itemsDB.Add(i.itemID, i);
-                                break;
-                            case "Gear":
-                                i = Gear.readXML(reader);
-                                itemsDB.Add(i.itemID, i);
-                                break;
-                            case "Hero":
-                                i = Hero.readXML(reader);
-                                itemsDB.Add(i.itemID, i);
-                                break;
-                            case "LootBox":
-                                i = Lootbox.readXML(reader);
-                                itemsDB.Add(i.itemID, i);
-                                break;
-                            case "Weapon":
-                                i = Weapon.readXML(reader);
-                                
-                                i.binding = listView2.Items.Count;
-
-                                itemsDB.Add(i.itemID, i);
-                                string icon = i.image;
-
-                                icon = icon.Replace("$Data", Properties.Settings.Default.dataFolder);
-                                icon = icon.Replace(".dds", ".png");
-                                //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
-
-                                ListViewItem lvi = new ListViewItem(i.name + "\n(" + i.itemID + ")");
-                                lvi.ImageIndex = imageList2.Images.Count;
-
-                                if (File.Exists(icon))
-                                    imageList2.Images.Add(ImageUtilities.getThumb((Bitmap) Image.FromFile(icon),
-                                        currentRes));
-                                else
-                                    lvi.ImageIndex = 0;
-
-                                listView2.Items.Add(lvi);
-
-                                break;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString(), "Critical Error occured!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            db = new SQLiteConnection("Database.dat");
+            db.CreateTable<Attachment>();
+            db.CreateTable<Gear>();
+            db.CreateTable<Generic>();
+            db.CreateTable<LootDataSQL>();
+            db.CreateTable<Weapon>();
 
             using (XmlReader reader = XmlReader.Create(Properties.Settings.Default.shopDBFile))
             {
@@ -688,7 +633,212 @@ namespace WarZLocal_Admin
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Settings s = new Settings();
-            s.ShowDialog();
+            if (s.ShowDialog() == DialogResult.OK)
+            {
+                switch (tabControl1.SelectedIndex)
+                {
+                    default:
+                        LoadItemsDB();
+                        break;
+                    case 1:
+                        LoadShopXML();
+                        break;
+                }
+            }
+        }
+
+        private void importItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog of = new OpenFileDialog();
+            of.Filter = "ItemsDB.xml|itemsDB.xml";
+            of.InitialDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (of.ShowDialog() != DialogResult.OK)
+                return;
+            Panel tp = new Panel();
+            tp.Size = Size;
+            tp.Location = new Point(0, 0);
+            tp.BackColor = SystemColors.Control;
+
+            LoadingCircle lc = new LoadingCircle();
+            lc.ThemeColor = Color.DodgerBlue;
+            lc.OutnerCircleRadius = 30;
+            lc.InnerCircleRadius = 10;
+            lc.LineWidth = 3;
+            lc.Size = new Size(64, 64);
+            lc.Location = new Point((Size.Width / 2) - lc.Size.Width, (Size.Height / 2) - lc.Size.Height);
+
+            Label lb = new Label();
+            lb.Text = "Import your items...";
+            lb.AutoSize = true;
+            lb.SizeChanged += (EventHandler)((s, ev) => { lb.Location = new Point((Size.Width / 2) - (lb.Size.Width/2) - 20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2)); });
+            lb.Location = new Point((Size.Width / 2) - (lb.Size.Width /2)-20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2));
+
+            Thread td = new Thread((() =>
+            {
+                Invoke((MethodInvoker)(() =>
+                {
+                    Controls.Add(tp);
+                    Controls.Add(lc);
+                    Controls.Add(lb);
+                    tp.BringToFront();
+                    lc.BringToFront();
+                    lb.BringToFront();
+
+                    lc.Start();
+
+                    lb.Text = "Loading items from XML...";
+                }));
+
+                using (XmlReader reader = XmlReader.Create(of.FileName))
+                {
+                    try
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader.NodeType != XmlNodeType.Element || reader.NodeType == XmlNodeType.EndElement)
+                                continue;
+
+                            switch (reader.Name)
+                            {
+                                default:
+                                    continue;
+                                case "Attachment":
+                                    Attachment attach = Attachment.readXML(reader);
+                                    attachments.Add(attach.ItemID, attach);
+                                    break;
+                                case "Backpack":
+                                    Gear _backpack = Gear.readXML(reader);
+                                    gears.Add(_backpack.ItemID, _backpack);
+                                    break;
+                                case "Item":
+                                    // Hack because of several items.
+                                    // 1 - Generic
+                                    // 30 - Food
+                                    int cat = Helper.getInt(reader.GetAttribute(1));
+                                    //i =  cat == 1 ? Generic.readXML(reader) : Food.readXML(reader);
+
+                                    if (cat == 1)
+                                    {
+                                        Generic _generic = Generic.readXML(reader);
+                                        generics.Add(_generic.ItemID, _generic);
+                                    }
+                                    else if (cat == 30)
+                                    {
+                                        Weapon wSQL = Weapon.readXML(reader);
+                                        weapons.Add(wSQL.ItemID, wSQL);
+                                    }
+                                    break;
+                                case "Gear":
+                                    Gear _gear = Gear.readXML(reader);
+                                    gears.Add(_gear.ItemID, _gear);
+                                    break;
+                                case "Hero":
+                                    Gear _hero = Gear.readXML(reader);
+                                    gears.Add(_hero.ItemID, _hero);
+                                    break;
+                                case "LootBox":
+                                    Generic _lootbox = Generic.readXML(reader);
+                                    generics.Add(_lootbox.ItemID, _lootbox);
+                                    break;
+                                case "Weapon":
+                                    Weapon wSQL2 = Weapon.readXML(reader);
+                                    //WeaponSQL wSQL2 = WeaponSQL.Add(db, i);
+
+                                    weapons.Add(wSQL2.ItemID, wSQL2); // Bugfix
+
+                                    /*i.binding = listView2.Items.Count;
+
+                                itemsDB.Add(i.itemID, i);
+                                string icon = i.image;
+
+                                icon = icon.Replace("$Data", Properties.Settings.Default.dataFolder);
+                                icon = icon.Replace(".dds", ".png");
+                                //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
+
+                                ListViewItem lvi = new ListViewItem(i.name + "\n(" + i.itemID + ")");
+                                lvi.ImageIndex = imageList2.Images.Count;
+
+                                if (File.Exists(icon))
+                                    imageList2.Images.Add(ImageUtilities.getThumb((Bitmap) Image.FromFile(icon),
+                                        currentRes));
+                                else
+                                    lvi.ImageIndex = 0;
+
+                                listView2.Items.Add(lvi);*/
+
+                                    break;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString(), "Critical Error occured!", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                }
+
+                foreach (KeyValuePair<int, Attachment> a in attachments)
+                {
+                    int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Attachment WHERE itemID=?", a.Value.ItemID);
+                    if (count == 0)
+                    {
+                        db.Insert(a.Value);
+                        Console.WriteLine("New Attachment itemID: {0}", a.Value.ItemID);
+                        Invoke((MethodInvoker)(() =>
+                        {
+                            lb.Text = "Adding Attachment \""+a.Value.Name+"\" ("+a.Value.ItemID+")...";
+                        }));
+                    }
+                }
+
+                foreach (KeyValuePair<int, Gear> g in gears)
+                {
+                    int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Gear WHERE itemID=?", g.Value.ItemID);
+                    if (count == 0)
+                    {
+                        db.Insert(g.Value);
+                        Console.WriteLine("New Gear itemID: {0}", g.Value.ItemID);
+                        Invoke((MethodInvoker)(() =>
+                        {
+                            lb.Text = "Adding Gear \"" + g.Value.Name + "\" (" + g.Value.ItemID + ")...";
+                        }));
+                    }
+                }
+
+                foreach (KeyValuePair<int, Generic> g in generics)
+                {
+                    int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Generic WHERE itemID=?", g.Value.ItemID);
+                    if (count == 0)
+                    {
+                        db.Insert(g.Value);
+                        Console.WriteLine("New Generic itemID: {0}", g.Value.ItemID);
+                        Invoke((MethodInvoker)(() =>
+                        {
+                            lb.Text = "Adding Generic \""+g.Value.Name+"\" ("+g.Value.ItemID+")...";
+                        }));
+                    }
+                }
+
+                foreach (KeyValuePair<int, Weapon> w in weapons)
+                {
+                    int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Weapon WHERE itemID=?", w.Value.ItemID);
+                    if (count == 0)
+                    {
+                        db.Insert(w.Value);
+                        Console.WriteLine("New Weapon itemID: {0}", w.Value.ItemID);
+                        Invoke((MethodInvoker)(() =>
+                        {
+                            lb.Text = "Adding Weapon \""+w.Value.Name+"\" ("+w.Value.ItemID+")...";
+                        }));
+                    }
+                }
+
+                Invoke((MethodInvoker)(() =>
+                {
+                    Controls.Remove(tp);
+                }));
+            }));
+            td.Start();
         }
     }
 }

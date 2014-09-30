@@ -58,5 +58,17 @@ namespace WarZLocal_Admin.Properties {
                 this["shopDBFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int itemEditDisplay {
+            get {
+                return ((int)(this["itemEditDisplay"]));
+            }
+            set {
+                this["itemEditDisplay"] = value;
+            }
+        }
     }
 }
