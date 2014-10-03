@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Quick Config");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Fonts & Colors");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Threading");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Advanced", new System.Windows.Forms.TreeNode[] {
-            treeNode2,
-            treeNode3});
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Quick Config");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Fonts & Colors");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Threading");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Advanced", new System.Windows.Forms.TreeNode[] {
+            treeNode6,
+            treeNode7});
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.colorConfig = new System.Windows.Forms.Panel();
@@ -101,8 +101,8 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.colorConfig);
             this.splitContainer1.Panel2.Controls.Add(this.quickConfig);
+            this.splitContainer1.Panel2.Controls.Add(this.colorConfig);
             this.splitContainer1.Panel2.Controls.Add(this.threading);
             this.splitContainer1.Size = new System.Drawing.Size(662, 390);
             this.splitContainer1.SplitterDistance = 127;
@@ -113,17 +113,17 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Knoten0";
-            treeNode1.Text = "Quick Config";
-            treeNode2.Name = "Knoten2";
-            treeNode2.Text = "Fonts & Colors";
-            treeNode3.Name = "Knoten1";
-            treeNode3.Text = "Threading";
-            treeNode4.Name = "Knoten1";
-            treeNode4.Text = "Advanced";
+            treeNode5.Name = "Knoten0";
+            treeNode5.Text = "Quick Config";
+            treeNode6.Name = "Knoten2";
+            treeNode6.Text = "Fonts & Colors";
+            treeNode7.Name = "Knoten1";
+            treeNode7.Text = "Threading";
+            treeNode8.Name = "Knoten1";
+            treeNode8.Text = "Advanced";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode4});
+            treeNode5,
+            treeNode8});
             this.treeView1.Size = new System.Drawing.Size(127, 390);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
@@ -353,9 +353,10 @@
             this.quickConfig.Controls.Add(this.label1);
             this.quickConfig.Controls.Add(this.textBox2);
             this.quickConfig.Controls.Add(this.textBox1);
-            this.quickConfig.Location = new System.Drawing.Point(0, 319);
+            this.quickConfig.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.quickConfig.Location = new System.Drawing.Point(0, 0);
             this.quickConfig.Name = "quickConfig";
-            this.quickConfig.Size = new System.Drawing.Size(122, 71);
+            this.quickConfig.Size = new System.Drawing.Size(531, 390);
             this.quickConfig.TabIndex = 0;
             // 
             // checkBox1
@@ -460,9 +461,10 @@
             // threading
             // 
             this.threading.Controls.Add(this.checkBox2);
-            this.threading.Location = new System.Drawing.Point(388, 319);
+            this.threading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.threading.Location = new System.Drawing.Point(0, 0);
             this.threading.Name = "threading";
-            this.threading.Size = new System.Drawing.Size(143, 71);
+            this.threading.Size = new System.Drawing.Size(531, 390);
             this.threading.TabIndex = 1;
             this.threading.Visible = false;
             // 
@@ -476,6 +478,7 @@
             this.checkBox2.TabIndex = 0;
             this.checkBox2.Text = "Use UI Thread for populating Items:";
             this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // splitContainer2
             // 

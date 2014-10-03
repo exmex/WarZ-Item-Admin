@@ -38,5 +38,8 @@
     <Setting Name="listFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
     </Setting>
+    <Setting Name="populateInUI" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

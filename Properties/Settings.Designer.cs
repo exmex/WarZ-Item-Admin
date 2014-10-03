@@ -166,5 +166,17 @@ namespace WarZLocal_Admin.Properties {
                 this["listFont"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool populateInUI {
+            get {
+                return ((bool)(this["populateInUI"]));
+            }
+            set {
+                this["populateInUI"] = value;
+            }
+        }
     }
 }
