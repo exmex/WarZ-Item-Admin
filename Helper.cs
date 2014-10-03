@@ -39,6 +39,7 @@ namespace WarZLocal_Admin
                  * 25 - Handguns
                  * 26 - Submachinegun
                  * 27 - Grenades
+                 * 28 - Usable Item
                  * 29 - Melee
                  * 30 - Food
                  * 33 - Water
@@ -73,6 +74,8 @@ namespace WarZLocal_Admin
                     return 26;
                 case "Grenades":
                     return 27;
+                case "Usable Item":
+                    return 28;
                 case "Melee":
                     return 29;
                 case "Food":
@@ -141,6 +144,8 @@ namespace WarZLocal_Admin
                     return "Grenades";
                 case 29:
                     return "Melee";
+                case 28:
+                    return "Usable Item";
                 case 30:
                     return "Food";
                 case 33:
@@ -241,6 +246,7 @@ namespace WarZLocal_Admin
              * 25 - Handguns
              * 26 - Submachinegun
              * 27 - Grenades
+             * 28 - Usable Item
              * 29 - Melee
              * 30 - Food
              * 33 - Water
@@ -268,6 +274,7 @@ namespace WarZLocal_Admin
                 case 25:
                 case 26:
                 case 27:
+                case 28:
                 case 29:
                     return Properties.Settings.Default.weaponItemsColor;
                 case 30:

@@ -80,6 +80,7 @@ namespace WarZLocal_Admin
             Categories.Add(26, "Submachinegun");
             Categories.Add(27, "Grenade");
             Categories.Add(29, "Melee");
+            Categories.Add(28, "Usable Item");
             Categories.Add(30, "Food");
             Categories.Add(33, "Water");
 

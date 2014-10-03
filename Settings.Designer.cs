@@ -29,21 +29,26 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode49 = new System.Windows.Forms.TreeNode("Quick Config");
-            System.Windows.Forms.TreeNode treeNode50 = new System.Windows.Forms.TreeNode("Fonts & Colors");
-            System.Windows.Forms.TreeNode treeNode51 = new System.Windows.Forms.TreeNode("Threading");
-            System.Windows.Forms.TreeNode treeNode52 = new System.Windows.Forms.TreeNode("Advanced", new System.Windows.Forms.TreeNode[] {
-            treeNode50,
-            treeNode51});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Quick Config");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Fonts & Colors");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Threading");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Advanced", new System.Windows.Forms.TreeNode[] {
+            treeNode2,
+            treeNode3});
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.colorConfig = new System.Windows.Forms.Panel();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.button11 = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
@@ -70,11 +75,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.label13 = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.button11 = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -113,17 +113,17 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode49.Name = "Knoten0";
-            treeNode49.Text = "Quick Config";
-            treeNode50.Name = "Knoten2";
-            treeNode50.Text = "Fonts & Colors";
-            treeNode51.Name = "Knoten1";
-            treeNode51.Text = "Threading";
-            treeNode52.Name = "Knoten1";
-            treeNode52.Text = "Advanced";
+            treeNode1.Name = "Knoten0";
+            treeNode1.Text = "Quick Config";
+            treeNode2.Name = "Knoten2";
+            treeNode2.Text = "Fonts & Colors";
+            treeNode3.Name = "Knoten1";
+            treeNode3.Text = "Threading";
+            treeNode4.Name = "Knoten1";
+            treeNode4.Text = "Advanced";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode49,
-            treeNode52});
+            treeNode1,
+            treeNode4});
             this.treeView1.Size = new System.Drawing.Size(127, 390);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
@@ -157,10 +157,42 @@
             this.colorConfig.TabIndex = 2;
             this.colorConfig.Visible = false;
             // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.checkBox3.Location = new System.Drawing.Point(14, 12);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(206, 17);
+            this.checkBox3.TabIndex = 3;
+            this.checkBox3.Text = "Show colors in \"Everything\" Category:";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(213, 60);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(91, 26);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "Categories:\r\n   19 - Attachment";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(222, 257);
+            this.label15.MaximumSize = new System.Drawing.Size(200, 400);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(65, 13);
+            this.label15.TabIndex = 2;
+            this.label15.Text = "Current font:";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(279, 162);
+            this.label12.Location = new System.Drawing.Point(213, 155);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(66, 39);
             this.label12.TabIndex = 2;
@@ -169,18 +201,18 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(43, 264);
+            this.label9.Location = new System.Drawing.Point(43, 257);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(114, 117);
+            this.label9.Size = new System.Drawing.Size(114, 130);
             this.label9.TabIndex = 2;
             this.label9.Text = "Categories:\r\n   20 - Assault Rifle\r\n   21 - Sniper Rifle\r\n   22 - Shotgun\r\n   23 " +
-    "- Machine gun\r\n   25 - Handgun\r\n   26 - Submachinegun\r\n   27 - Grenade\r\n   29 - " +
-    "Melee";
+    "- Machine gun\r\n   25 - Handgun\r\n   26 - Submachinegun\r\n   27 - Grenade\r\n   28 - " +
+    "Usable Item\r\n   29 - Melee";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(43, 162);
+            this.label7.Location = new System.Drawing.Point(43, 155);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(86, 65);
             this.label7.TabIndex = 2;
@@ -189,7 +221,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(43, 67);
+            this.label5.Location = new System.Drawing.Point(43, 60);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(65, 52);
             this.label5.TabIndex = 2;
@@ -198,25 +230,44 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(235, 44);
+            this.label10.Location = new System.Drawing.Point(169, 37);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(119, 13);
             this.label10.TabIndex = 1;
             this.label10.Text = "Attachment Items Color:";
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(222, 234);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(66, 13);
+            this.label14.TabIndex = 1;
+            this.label14.Text = "Itemlist Font:";
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(235, 139);
+            this.label11.Location = new System.Drawing.Point(169, 132);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(123, 13);
             this.label11.TabIndex = 1;
             this.label11.Text = "Consumable Items Color:";
             // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(294, 229);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(32, 23);
+            this.button11.TabIndex = 0;
+            this.button11.Text = "...";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(11, 241);
+            this.label8.Location = new System.Drawing.Point(11, 234);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(106, 13);
             this.label8.TabIndex = 1;
@@ -224,7 +275,7 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(364, 134);
+            this.button10.Location = new System.Drawing.Point(298, 127);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(32, 23);
             this.button10.TabIndex = 0;
@@ -234,7 +285,7 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(361, 39);
+            this.button9.Location = new System.Drawing.Point(295, 32);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(32, 23);
             this.button9.TabIndex = 0;
@@ -244,7 +295,7 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(128, 236);
+            this.button8.Location = new System.Drawing.Point(128, 229);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(32, 23);
             this.button8.TabIndex = 0;
@@ -255,7 +306,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(11, 139);
+            this.label6.Location = new System.Drawing.Point(11, 132);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(111, 13);
             this.label6.TabIndex = 1;
@@ -263,7 +314,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(128, 134);
+            this.button7.Location = new System.Drawing.Point(128, 127);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(32, 23);
             this.button7.TabIndex = 0;
@@ -274,7 +325,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(22, 44);
+            this.label3.Location = new System.Drawing.Point(22, 37);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 13);
             this.label3.TabIndex = 1;
@@ -282,7 +333,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(128, 39);
+            this.button5.Location = new System.Drawing.Point(128, 32);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(32, 23);
             this.button5.TabIndex = 0;
@@ -467,57 +518,6 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(279, 67);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(91, 26);
-            this.label13.TabIndex = 2;
-            this.label13.Text = "Categories:\r\n   19 - Attachment";
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBox3.Location = new System.Drawing.Point(14, 12);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(206, 17);
-            this.checkBox3.TabIndex = 3;
-            this.checkBox3.Text = "Show colors in \"Everything\" Category:";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
-            // 
-            // button11
-            // 
-            this.button11.Location = new System.Drawing.Point(360, 236);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(32, 23);
-            this.button11.TabIndex = 0;
-            this.button11.Text = "...";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(288, 241);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(66, 13);
-            this.label14.TabIndex = 1;
-            this.label14.Text = "Itemlist Font:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(288, 264);
-            this.label15.MaximumSize = new System.Drawing.Size(200, 400);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 13);
-            this.label15.TabIndex = 2;
-            this.label15.Text = "Current font:";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Settings
             // 
