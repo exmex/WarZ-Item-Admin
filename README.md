@@ -15,4 +15,8 @@ Looking for the old informations? Head to [Old Informations](https://github.com/
 
 =============
 
+### Before complaining about "Import from URL doesn't work", please ensure you applied all custom patches from the page [Custom Patches](https://github.com/exmex/WarZ-Item-Admin/wiki/Custom-Patches)
+
+=============
+
 Want to help developing? Make a pull request!

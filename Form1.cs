@@ -172,7 +172,7 @@ namespace WarZLocal_Admin
                                     errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
                                     errorProvider1.SetError(textBox1, "No valid operator found!");
                                 }
-                            break;
+                                break;
                             case "!&":
                                 if (!string.IsNullOrEmpty(compareString))
                                     checkForText =
@@ -184,9 +184,10 @@ namespace WarZLocal_Admin
                                     errorProvider1.SetError(textBox1, "No valid operator found!");
                                     continue;
                                 }
-                            break;
+                                break;
                         }
-                    }else if (match || match3)
+                    }
+                    else if (match || match3)
                     {
                         var m = Regex.Matches(textBox1.Text, "(" + vars + ")(" + ops + ")\"(.*?)\"");
                         var mc2 = Regex.Matches(textBox1.Text, "(" + vars + ")(" + ops + ")(.*?)");
@@ -225,7 +226,7 @@ namespace WarZLocal_Admin
                                     continue;
                                 break;
                             case "c":
-                                if(number != -999)
+                                if (number != -999)
                                     compareInt = i.Value.Category;
                                 else
                                     compareString = Helper.fromItemsCategory(i.Value.Category);
@@ -310,7 +311,7 @@ namespace WarZLocal_Admin
                     var img = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon;
                     //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
 
-                    if(tabControl1.SelectedIndex == 0)
+                    if (tabControl1.SelectedIndex == 0)
                         i.Value.binding = lvil.Count;
 
                     var lvi = new ListViewItem(i.Value.Name + "\n(" + i.Value.ItemID + ")")
@@ -357,7 +358,7 @@ namespace WarZLocal_Admin
                     if (i.Value.pricePerm <= 0 || i.Value.pricePerm == -999)
                         continue;
                     //if (tabControl1.SelectedIndex == 1)
-                        i.Value.binding = listView1.Items.Count;
+                    i.Value.binding = listView1.Items.Count;
                     var img = i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder);
                     img = img.Replace(".dds", ".png");
                     //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
@@ -378,8 +379,8 @@ namespace WarZLocal_Admin
                 listView1.Invoke((MethodInvoker)(() => listView1.Items.AddRange(lvil.ToArray())));
                 loadingCircle1.Invoke((MethodInvoker)(() =>
                 {
-                       loadingCircle1.Visible = false;
-                        loadingCircle1.Stop();
+                    loadingCircle1.Visible = false;
+                    loadingCircle1.Stop();
                 }));
             }));
             td.Start();
@@ -452,19 +453,19 @@ namespace WarZLocal_Admin
             {
                 default:
                     currentRes = new Size(32, 32);
-                break;
+                    break;
 
                 case 1:
                     currentRes = new Size(64, 64);
-                break;
+                    break;
 
                 case 2:
                     currentRes = new Size(128, 128);
-                break;
+                    break;
 
                 case 3:
                     currentRes = new Size(256, 256);
-                break;
+                    break;
             }
             LoadItemsDb();
         }
@@ -610,7 +611,7 @@ namespace WarZLocal_Admin
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             XmlWriter writer;
-            var xmlWriterSettings = new XmlWriterSettings {NewLineOnAttributes = false, Indent = true};
+            var xmlWriterSettings = new XmlWriterSettings { NewLineOnAttributes = false, Indent = true };
             if (tabControl1.SelectedIndex == 0)
             {
                 writer = XmlWriter.Create(@"D:\Server\Open-WarZ\source\bin\Data\Weapons\out.xml",
