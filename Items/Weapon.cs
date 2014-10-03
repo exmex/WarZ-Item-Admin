@@ -119,7 +119,7 @@ namespace WarZLocal_Admin
             i.ItemID = Helper.getInt(reader.GetAttribute(0));
             i.Category = Helper.getInt(reader.GetAttribute(1));
             //i.internalCategory = 0;
-            if (i.Category != 30)
+            if (i.Category != 30 && i.Category != 33)
             {
                 i.IsUpgradeable = Helper.getInt(reader.GetAttribute(2));
                 i.FNAME = reader.GetAttribute(3);
@@ -136,7 +136,7 @@ namespace WarZLocal_Admin
                 {
                     case "Model":
                         //i.file = subs.GetAttribute(0);
-                        if (i.Category == 30)
+                        if (i.Category == 30 || i.Category == 33)
                             i.FNAME = Path.GetFileNameWithoutExtension(subs.GetAttribute(0));
                         else
                         {

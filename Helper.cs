@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -220,6 +221,59 @@ namespace WarZLocal_Admin
                 return i;
 
             return 0;
+        }
+
+        public static Color getCategoryColor(int category)
+        {
+            /*
+             * 1 - Account
+             * 2 - Boost
+             * 7 - LootBox
+             * 11 - Armor
+             * 12 - Backpack
+             * 13 - Helmet
+             * 16 - Hero
+             * 19 - Attachment
+             * 20 - Assault Rifle
+             * 21 - Sniper Rifle
+             * 22 - Shotgun
+             * 23 - Machine gun
+             * 25 - Handguns
+             * 26 - Submachinegun
+             * 27 - Grenades
+             * 29 - Melee
+             * 30 - Food
+             * 33 - Water
+             */
+
+            switch (category)
+            {
+                default:
+                    return Color.Red;
+                case 1:
+                case 2:
+                case 7:
+                    return Properties.Settings.Default.internalItemsColor;
+                case 11:
+                case 12:
+                case 13:
+                case 16:
+                    return Properties.Settings.Default.wearableItemsColor;
+                case 19:
+                    return Properties.Settings.Default.attachmentItemsColor;
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 25:
+                case 26:
+                case 27:
+                case 29:
+                    return Properties.Settings.Default.weaponItemsColor;
+                case 30:
+                case 33:
+                    return Properties.Settings.Default.consumableItemsColor;
+            }
         }
     }
 }

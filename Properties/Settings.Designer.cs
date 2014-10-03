@@ -70,5 +70,101 @@ namespace WarZLocal_Admin.Properties {
                 this["itemEditDisplay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool loadShopFromFile {
+            get {
+                return ((bool)(this["loadShopFromFile"]));
+            }
+            set {
+                this["loadShopFromFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Purple")]
+        public global::System.Drawing.Color internalItemsColor {
+            get {
+                return ((global::System.Drawing.Color)(this["internalItemsColor"]));
+            }
+            set {
+                this["internalItemsColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Gold")]
+        public global::System.Drawing.Color wearableItemsColor {
+            get {
+                return ((global::System.Drawing.Color)(this["wearableItemsColor"]));
+            }
+            set {
+                this["wearableItemsColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkBlue")]
+        public global::System.Drawing.Color weaponItemsColor {
+            get {
+                return ((global::System.Drawing.Color)(this["weaponItemsColor"]));
+            }
+            set {
+                this["weaponItemsColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Coral")]
+        public global::System.Drawing.Color attachmentItemsColor {
+            get {
+                return ((global::System.Drawing.Color)(this["attachmentItemsColor"]));
+            }
+            set {
+                this["attachmentItemsColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Cyan")]
+        public global::System.Drawing.Color consumableItemsColor {
+            get {
+                return ((global::System.Drawing.Color)(this["consumableItemsColor"]));
+            }
+            set {
+                this["consumableItemsColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool showColorsEverything {
+            get {
+                return ((bool)(this["showColorsEverything"]));
+            }
+            set {
+                this["showColorsEverything"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        public global::System.Drawing.Font listFont {
+            get {
+                return ((global::System.Drawing.Font)(this["listFont"]));
+            }
+            set {
+                this["listFont"] = value;
+            }
+        }
     }
 }

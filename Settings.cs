@@ -27,9 +27,24 @@ namespace WarZLocal_Admin
 
         private void Settings_Load(object sender, EventArgs e)
         {
+            threading.Dock = DockStyle.Fill;
+            quickConfig.Dock = DockStyle.Fill;
+            colorConfig.Dock = DockStyle.Fill;
             //folderBrowserDialog1.SelectedPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Arktos Entertainment Group\WarZ", "Installed", null);
 
             textBox1.Text = Properties.Settings.Default.dataFolder;
+            checkBox1.Checked = Properties.Settings.Default.loadShopFromFile;
+            textBox2.Text = Properties.Settings.Default.shopDBFile;
+
+            label5.ForeColor = Properties.Settings.Default.internalItemsColor;
+            label7.ForeColor = Properties.Settings.Default.wearableItemsColor;
+            label9.ForeColor = Properties.Settings.Default.weaponItemsColor;
+            label13.ForeColor = Properties.Settings.Default.attachmentItemsColor;
+            label12.ForeColor = Properties.Settings.Default.consumableItemsColor;
+
+            checkBox3.Checked = Properties.Settings.Default.showColorsEverything;
+            label15.Font = Properties.Settings.Default.listFont;
+            label15.Text = "Current font: " + Environment.NewLine + Properties.Settings.Default.listFont.OriginalFontName + " (" + Properties.Settings.Default.listFont.Size + ")";
 
             folderBrowserDialog1.SelectedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string pathing = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Data";
@@ -84,7 +99,7 @@ namespace WarZLocal_Admin
 
             label4.Visible = true;
             label4.Text = "Starting..";
-            label4.Location = new Point(215 - (label4.Size.Width / 2), label4.Location.Y);
+            //label4.Location = new Point(215 - (label4.Size.Width / 2), label4.Location.Y);
             loadingCircle1.Visible = true;
             loadingCircle1.Start();
 
@@ -109,7 +124,7 @@ namespace WarZLocal_Admin
                 label4.Invoke((MethodInvoker)(() =>
                 {
                     label4.Text = "Requesting File...";
-                    label4.Location = new Point(220 - (label4.Size.Width / 2), label4.Location.Y);
+                    //label4.Location = new Point(220 - (label4.Size.Width / 2), label4.Location.Y);
                 }));
 
                 HttpWebRequest hwRq;
@@ -139,7 +154,7 @@ namespace WarZLocal_Admin
                             label4.Text = "Resuming Download (" + iProgressPercentage + "%)...";
                         else
                             label4.Text = "Downloading Files (" + iProgressPercentage + "%)...";
-                        label4.Location = new Point(220 - (label4.Size.Width / 2), label4.Location.Y);
+                        //label4.Location = new Point(220 - (label4.Size.Width / 2), label4.Location.Y);
                     }));
                     saveFileStream.Write(downBuffer, 0, iByteSize);
                 }
@@ -153,7 +168,7 @@ namespace WarZLocal_Admin
                         label4.Invoke((MethodInvoker)(() =>
                         {
                             label4.Text = "Extracting Files...";
-                            label4.Location = new Point(220 - (label4.Size.Width / 2), label4.Location.Y);
+                            //label4.Location = new Point(220 - (label4.Size.Width / 2), label4.Location.Y);
                         }));
 
                         foreach (ZipEntry e in zip1)
@@ -161,7 +176,7 @@ namespace WarZLocal_Admin
                             label4.Invoke((MethodInvoker)(() =>
                             {
                                 label4.Text = "Extracting "+e.FileName+"...";
-                                label4.Location = new Point(220 - (label4.Size.Width / 2), label4.Location.Y);
+                                //label4.Location = new Point(220 - (label4.Size.Width / 2), label4.Location.Y);
                             }));
                             e.Extract(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Data",
                                 ExtractExistingFileAction.OverwriteSilently);
@@ -182,10 +197,131 @@ namespace WarZLocal_Admin
 
         private void button2_Click(object sender, EventArgs e)
         {
+            Properties.Settings.Default.showColorsEverything = checkBox3.Checked;
             Properties.Settings.Default.dataFolder = textBox1.Text;
+            Properties.Settings.Default.shopDBFile = textBox2.Text;
+            Properties.Settings.Default.loadShopFromFile = checkBox1.Checked;
             Properties.Settings.Default.Save();
 
             DialogResult = DialogResult.OK;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (textBox2.Text == "")
+                textBox2.Text = Properties.Settings.Default.shopDBFile;
+            else
+                textBox2.Text = "";
+
+            button4.Visible = checkBox1.Checked;
+            if(checkBox1.Checked)
+                label2.Text = "Shop XML File:";
+            else
+                label2.Text = "Shop XML URL:";
+        }
+
+        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Nodes.Count >= 1)
+                return;
+            switch (e.Node.Text)
+            {
+                default:
+                    threading.Visible = false;
+                    colorConfig.Visible = false;
+                    quickConfig.Visible = true;
+                    break;
+                case "Fonts & Colors":
+                    threading.Visible = false;
+                    quickConfig.Visible = false;
+                    colorConfig.Visible = true;
+                    break;
+                case "Threading":
+                    threading.Visible = true;
+                    quickConfig.Visible = false;
+                    colorConfig.Visible = false;
+                    break;
+            }
+        }
+
+        private void colorChange_Click(object sender, EventArgs e)
+        {
+            if (sender == button5)
+            {
+                colorDialog1.Color = Properties.Settings.Default.internalItemsColor;
+                if (colorDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.internalItemsColor = colorDialog1.Color;
+                }
+            }
+            else if (sender == button7)
+            {
+                colorDialog1.Color = Properties.Settings.Default.wearableItemsColor;
+                if (colorDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.wearableItemsColor = colorDialog1.Color;
+                }
+            }
+            else if (sender == button8)
+            {
+                colorDialog1.Color = Properties.Settings.Default.weaponItemsColor;
+                if (colorDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.weaponItemsColor = colorDialog1.Color;
+                }
+            }else if (sender == button9)
+            {
+                colorDialog1.Color = Properties.Settings.Default.attachmentItemsColor;
+                if (colorDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.attachmentItemsColor = colorDialog1.Color;
+                }
+            }
+            else if (sender == button10)
+            {
+                colorDialog1.Color = Properties.Settings.Default.consumableItemsColor;
+                if (colorDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.consumableItemsColor = colorDialog1.Color;
+                }
+            }
+
+            label5.ForeColor = Properties.Settings.Default.internalItemsColor;
+            label7.ForeColor = Properties.Settings.Default.wearableItemsColor;
+            label9.ForeColor = Properties.Settings.Default.weaponItemsColor;
+            label13.ForeColor = Properties.Settings.Default.attachmentItemsColor;
+            label12.ForeColor = Properties.Settings.Default.consumableItemsColor;
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            label3.Visible = checkBox3.Checked;
+            label5.Visible = checkBox3.Checked;
+            label6.Visible = checkBox3.Checked;
+            label7.Visible = checkBox3.Checked;
+            label8.Visible = checkBox3.Checked;
+            label9.Visible = checkBox3.Checked;
+            label10.Visible = checkBox3.Checked;
+            label11.Visible = checkBox3.Checked;
+            label12.Visible = checkBox3.Checked;
+            label13.Visible = checkBox3.Checked;
+
+            button5.Visible = checkBox3.Checked;
+            button7.Visible = checkBox3.Checked;
+            button8.Visible = checkBox3.Checked;
+            button9.Visible = checkBox3.Checked;
+            button10.Visible = checkBox3.Checked;
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            fontDialog1.Font = Properties.Settings.Default.listFont;
+            if (fontDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Properties.Settings.Default.listFont = fontDialog1.Font;
+                label15.Font = Properties.Settings.Default.listFont;
+                label15.Text = "Current font:" + Environment.NewLine + Properties.Settings.Default.listFont.Name + " (" + Properties.Settings.Default.listFont.Size + ")";
+            }
         }
     }
 }

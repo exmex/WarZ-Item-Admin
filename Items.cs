@@ -491,6 +491,14 @@ namespace WarZLocal_Admin
 		</Item>
          */
 
+        public int ItemID = 0;
+        public string Name = "";
+        public string FNAME = "";
+        public string Description = "";
+        public int Category = 0;
+        public string StoreIcon = "";
+
+        
         // <Weapon>
         public int itemID = -999;          // 0
         public int internalCategory = -999;// 1

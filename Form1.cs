@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -20,12 +21,19 @@ namespace WarZLocal_Admin
             InitializeComponent();
         }
 
+        // ReSharper disable FieldCanBeMadeReadOnly.Local
+        // ReSharper disable RedundantAssignment
+        // ReSharper disable InconsistentNaming
+        // ReSharper disable LocalizableElement
+
         private Dictionary<int, Items> itemsDB = new Dictionary<int, Items>();
 
         private Dictionary<int, Attachment> attachments = new Dictionary<int, Attachment>();
         private Dictionary<int, Gear> gears = new Dictionary<int, Gear>();
         private Dictionary<int, Generic> generics = new Dictionary<int, Generic>();
         private Dictionary<int, Weapon> weapons = new Dictionary<int, Weapon>();
+
+        public Dictionary<int, string> Categories = new Dictionary<int, string>();
 
         private SQLiteConnection db;
         private Thread temp_thread;
@@ -34,17 +42,16 @@ namespace WarZLocal_Admin
         private Size currentRes2 = new Size(128, 128);
         private void Form1_Load(object sender, EventArgs e)
         {
-            comboBox1.SelectedIndex = 0;
+            //comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 1;
             comboBox3.SelectedIndex = 1;
+
+            listView2.Font = Properties.Settings.Default.listFont;
 
             listView2.Clear();
             imageList2.ImageSize = currentRes;
             imageList2.Images.Clear();
             imageList2.Images.Add(ImageUtilities.getThumb(Resources.no_icon, currentRes));
-
-            loadingCircle1.Visible = true;
-            loadingCircle1.Start();
 
             db = new SQLiteConnection("Database.dat");
             db.CreateTable<Attachment>();
@@ -53,34 +60,188 @@ namespace WarZLocal_Admin
             db.CreateTable<LootDataSQL>();
             db.CreateTable<Weapon>();
 
-            using (XmlReader reader = XmlReader.Create(Properties.Settings.Default.shopDBFile))
+            /* Populate Combobox */
+
+            //Categories
+            Categories.Add(0, "Everything");
+            Categories.Add(1, "Account");
+            Categories.Add(2, "Boost");
+            Categories.Add(7, "LootBox");
+            Categories.Add(11, "Armor");
+            Categories.Add(12, "Backpack");
+            Categories.Add(13, "Helmet");
+            Categories.Add(16, "Hero");
+            Categories.Add(19, "Attachment");
+            Categories.Add(20, "Assault Rifle");
+            Categories.Add(21, "Sniper Rifle");
+            Categories.Add(22, "Shotgun");
+            Categories.Add(23, "Machine gun");
+            Categories.Add(25, "Handgun");
+            Categories.Add(26, "Submachinegun");
+            Categories.Add(27, "Grenade");
+            Categories.Add(29, "Melee");
+            Categories.Add(30, "Food");
+            Categories.Add(33, "Water");
+
+            comboBox1.DataSource = new BindingSource(Categories, null);
+            comboBox1.DisplayMember = "Value";
+            comboBox1.ValueMember = "Key";
+
+            /* ----------------- */
+
+            temp_thread = new Thread((() =>
             {
-                while (reader.Read())
+                loadingCircle1.Invoke((MethodInvoker)(() =>
                 {
-                    if (reader.Name == "si" && reader.IsStartElement())
+                    loadingCircle1.Visible = true;
+                    loadingCircle1.Start();
+                    label8.Text = "Loading Items from Database...";
+                }));
+
+                var att = db.Table<Attachment>();
+                foreach (var val in att)
+                {
+                    label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Attachment \"" + val.Name + "\"..."));
+
+                    attachments.Add(val.ItemID, val);
+
+                    var it = new Items
                     {
-                        int itemID;
-                        int price;
-                        int.TryParse(reader.GetAttribute(0), out itemID);
-                        int.TryParse(reader.GetAttribute(1), out price);
+                        ItemID = val.ItemID,
+                        Category = val.Category,
+                        FNAME = val.FNAME,
+                        Name = val.Name,
+                        StoreIcon = val.FNAME + ".png",
+                        Description = val.Description
+                    };
+                    itemsDB.Add(val.ItemID, it);
+                }
 
-                        if (price == 0)
-                            int.TryParse(reader.GetAttribute(2), out price);
+                var ge = db.Table<Gear>();
+                foreach (var val in ge)
+                {
+                    label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Gear \"" + val.Name + "\"..."));
 
-                        if (!itemsDB.ContainsKey(itemID))
-                            continue;
+                    gears.Add(val.ItemID, val);
 
-                        Items i = itemsDB[itemID];
-                        i.pricePerm = price;
+                    var it = new Items
+                    {
+                        ItemID = val.ItemID,
+                        Category = val.Category,
+                        FNAME = val.FNAME,
+                        Name = val.Name,
+                        StoreIcon = val.FNAME + ".png",
+                        Description = val.Description
+                    };
+                    itemsDB.Add(val.ItemID, it);
+                }
+
+                var gen = db.Table<Generic>();
+                foreach (var val in gen)
+                {
+                    label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Generic \"" + val.Name + "\"..."));
+
+                    generics.Add(val.ItemID, val);
+
+                    var it = new Items
+                    {
+                        ItemID = val.ItemID,
+                        Category = val.Category,
+                        FNAME = val.FNAME,
+                        Name = val.Name,
+                        StoreIcon = val.FNAME + ".png",
+                        Description = val.Description
+                    };
+                    itemsDB.Add(val.ItemID, it);
+                }
+
+                var lvil = new List<ListViewItem>();
+                var weap = db.Table<Weapon>();
+                foreach (var val in weap)
+                {
+                    label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Weapon \"" + val.Name + "\"..."));
+
+                    weapons.Add(val.ItemID, val);
+
+                    var it = new Items
+                    {
+                        ItemID = val.ItemID,
+                        Category = val.Category,
+                        FNAME = val.FNAME,
+                        Name = val.Name,
+                        StoreIcon = val.FNAME + ".png",
+                        Description = val.Description
+                    };
+                    itemsDB.Add(val.ItemID, it);
+                }
+
+                label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Shop Database..."));
+                
+                using (var reader = XmlReader.Create(Properties.Settings.Default.shopDBFile))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.Name == "si" && reader.IsStartElement())
+                        {
+                            int itemId;
+                            int price;
+                            int.TryParse(reader.GetAttribute(0), out itemId);
+                            int.TryParse(reader.GetAttribute(1), out price);
+
+                            if (price == 0)
+                                int.TryParse(reader.GetAttribute(2), out price);
+
+                            if (!itemsDB.ContainsKey(itemId))
+                                continue;
+
+                            var i = itemsDB[itemId];
+                            i.pricePerm = price;
+                        }
                     }
                 }
-            }
 
-            loadingCircle1.Stop();
-            loadingCircle1.Visible = false;
+                label8.Invoke((MethodInvoker)(() => label8.Text = "Adding Items to cache..."));
+                foreach (var item in itemsDB)
+                {
+                    /*const int cat = 1;
+                    if (cat == item.Value.Category)
+                    {*/
+                        if (string.IsNullOrEmpty(item.Value.Name))
+                            item.Value.Name = item.Value.FNAME;
+                        var lvi = new ListViewItem(item.Value.Name + "\n(" + item.Value.ItemID + ")")
+                        {
+                            ImageIndex = imageList2.Images.Count
+                        };
+
+                        if(Properties.Settings.Default.showColorsEverything)
+                            lvi.ForeColor = Helper.getCategoryColor(item.Value.Category);
+
+                        item.Value.binding = lvil.Count;
+
+                        string img = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + item.Value.StoreIcon;
+                        if (File.Exists(img))
+                            imageList2.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile(img), currentRes));
+                        else
+                            lvi.ImageIndex = 0;
+
+                        //listView2.Items.Add(lvi);
+                        lvil.Add(lvi);
+                    //}
+                }
+
+                loadingCircle1.Invoke((MethodInvoker)(() =>
+                {
+                    label8.Text = "Finishing...";
+                    listView2.Items.AddRange(lvil.ToArray());
+
+                    loadingCircle1.Stop();
+                    loadingCircle1.Visible = false;
+                }));
+            }));
+            temp_thread.Start();
         }
 
-        public void LoadItemsDB()
+        public void LoadItemsDb()
         {
             loadingCircle1.Visible = true;
             loadingCircle1.Start();
@@ -91,62 +252,74 @@ namespace WarZLocal_Admin
             imageList2.Images.Add(ImageUtilities.getThumb(Resources.no_icon, currentRes));
             listView2.Clear();
 
-            List<ListViewItem> lvil = new List<ListViewItem>();
+            var lvil = new List<ListViewItem>();
 
-            foreach (KeyValuePair<int, Items> i in itemsDB)
+            foreach (var i in itemsDB)
             {
                 i.Value.binding = -1;
 
-                bool checkForText = true;
+                var checkForText = true;
                 if (textBox1.Text != "")
                 {
-                    string vars = "img|i|n|d|c";
-                    string ops = "\\$|!\\$|&|!&|!=|<=|>=|=|>|<";
+                    const string vars = "img|i|n|d|c";
+                    const string ops = "\\$|!\\$|&|!&|!=|<=|>=|=|>|<";
 
-                    bool match = Regex.Match(textBox1.Text, "(" + vars + ")(" + ops + ")\"(.*?)\"").Success;
-                    bool match2 = Regex.Match(textBox1.Text, "\"(.*?)\"").Success;
-                    if (match)
+                    var match = Regex.Match(textBox1.Text, "(" + vars + ")(" + ops + ")\"(.*?)\"").Success;
+                    var match3 = Regex.Match(textBox1.Text, "(" + vars + ")(" + ops + ")(.*?)").Success;
+                    var match2 = Regex.Match(textBox1.Text, "\"(.*?)\"").Success;
+                    if (match || match3)
                     {
-                        MatchCollection m = Regex.Matches(textBox1.Text, "(" + vars + ")(" + ops + ")\"(.*?)\"");
+                        var m = Regex.Matches(textBox1.Text, "(" + vars + ")(" + ops + ")\"(.*?)\"");
+                        var mc2 = Regex.Matches(textBox1.Text, "(" + vars + ")(" + ops + ")(.*?)");
 
                         string text = textBox1.Text.Replace("\"", ""), compareString = "";
-                        int number = -999, compareInt = 0;
+                        int number = 0, compareInt = 0;
 
-                        text = text.Replace(m[0].Groups[1].Value, "");
-                        text = text.Replace(m[0].Groups[2].Value, "");
+                        var m1 = (m.Count >= 1) ? m[0].Groups[1].Value : mc2[0].Groups[1].Value;
+                        var m2 = (m.Count >= 1) ? m[0].Groups[2].Value : mc2[0].Groups[2].Value;
+
+                        text = text.Replace(m1, "");
+                        text = text.Replace(m2, "");
                         int.TryParse(text, out number);
-                        switch (m[0].Groups[1].Value)
+                        switch (m1)
                         {
                             case "i":
-                                compareInt = i.Value.itemID;
-                                if (i.Value.itemID == -999)
+                                compareInt = i.Value.ItemID;
+                                if (i.Value.itemID == 0)
                                     continue;
                                 break;
                             case "n":
-                                compareString = i.Value.name;
-                                if (string.IsNullOrEmpty(i.Value.name))
+                                compareString = i.Value.Name;
+                                compareString = compareString.ToLower();
+                                text = text.ToLower();
+                                if (string.IsNullOrEmpty(i.Value.Name))
                                     continue;
                                 break;
                             case "d":
-                                compareString = i.Value.desc;
-                                if (string.IsNullOrEmpty(i.Value.desc))
+                                compareString = i.Value.Description;
+                                if (match3)
+                                {
+                                    text = text.ToLower();
+                                    compareString = compareString.ToLower();
+                                }
+                                if (string.IsNullOrEmpty(i.Value.Description))
                                     continue;
                                 break;
                             case "img":
-                                compareString = i.Value.image;
-                                if (string.IsNullOrEmpty(i.Value.image))
+                                compareString = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon;
+                                if (string.IsNullOrEmpty(i.Value.StoreIcon))
                                     continue;
                                 break;
                             case "c":
                                 if(number != -999)
-                                    compareInt = i.Value.category;
+                                    compareInt = i.Value.Category;
                                 else
-                                    compareString = Helper.fromItemsCategory(i.Value.category);
-                                if (i.Value.category == -999)
+                                    compareString = Helper.fromItemsCategory(i.Value.Category);
+                                if (i.Value.Category == 0)
                                     continue;
                                 break;
                         }
-                        switch (m[0].Groups[2].Value)
+                        switch (m2)
                         {
                             default:
                                 errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
@@ -156,8 +329,7 @@ namespace WarZLocal_Admin
                                 if (!string.IsNullOrEmpty(compareString))
                                     checkForText =
                                         File.Exists(
-                                            i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder)
-                                                .Replace(".dds", ".png"));
+                                            Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon);
                                 else
                                 {
                                     errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
@@ -168,8 +340,7 @@ namespace WarZLocal_Admin
                                 if (!string.IsNullOrEmpty(compareString))
                                     checkForText =
                                         !File.Exists(
-                                            i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder)
-                                                .Replace(".dds", ".png"));
+                                            Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon);
                                 else
                                 {
                                     errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
@@ -237,23 +408,27 @@ namespace WarZLocal_Admin
                     }
                     else if (match2)
                     {
-                        string text = textBox1.Text.Replace("\"", "");
+                        var text = textBox1.Text.Replace("\"", "");
                         checkForText = i.Value.name.Contains(text);
                     }
                     else
                         checkForText = i.Value.name.ToLower().Contains(textBox1.Text.ToLower());
                 }
-                if (checkForText && i.Value.internalCategory == comboBox1.SelectedIndex)
+                if (checkForText && (i.Value.Category.ToString(CultureInfo.InvariantCulture) == comboBox1.SelectedValue.ToString() || comboBox1.SelectedValue.ToString() == "0"))
                 {
-                    string img = i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder);
-                    img = img.Replace(".dds", ".png");
+                    var img = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon;
                     //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
 
                     if(tabControl1.SelectedIndex == 0)
                         i.Value.binding = lvil.Count;
 
-                    ListViewItem lvi = new ListViewItem(i.Value.name + "\n(" + i.Value.itemID + ")");
-                    lvi.ImageIndex = imageList2.Images.Count;
+                    var lvi = new ListViewItem(i.Value.Name + "\n(" + i.Value.ItemID + ")")
+                    {
+                        ImageIndex = imageList2.Images.Count
+                    };
+
+                    if (Properties.Settings.Default.showColorsEverything && comboBox1.SelectedValue.ToString() == "0")
+                        lvi.ForeColor = Helper.getCategoryColor(i.Value.Category);
 
                     if (File.Exists(img))
                         imageList2.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile(img), currentRes));
@@ -269,7 +444,7 @@ namespace WarZLocal_Admin
             loadingCircle1.Stop();
         }
 
-        public void LoadShopXML()
+        public void LoadShopXml()
         {
             loadingCircle1.Visible = true;
             loadingCircle1.Start();
@@ -280,11 +455,11 @@ namespace WarZLocal_Admin
             imageList1.Images.Clear();
             imageList1.Images.Add(ImageUtilities.getThumb(Resources.no_icon, currentRes2));
 
-            List<ListViewItem> lvil = new List<ListViewItem>();
+            var lvil = new List<ListViewItem>();
 
-            Thread td = new Thread((() =>
+            var td = new Thread((() =>
             {
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     i.Value.binding = -1;
 
@@ -292,12 +467,14 @@ namespace WarZLocal_Admin
                         continue;
                     //if (tabControl1.SelectedIndex == 1)
                         i.Value.binding = listView1.Items.Count;
-                    string img = i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder);
+                    var img = i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder);
                     img = img.Replace(".dds", ".png");
                     //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
 
-                    ListViewItem lvi = new ListViewItem(i.Value.name + "\n" + i.Value.pricePerm + " GD");
-                    lvi.ImageIndex = imageList1.Images.Count;
+                    var lvi = new ListViewItem(i.Value.name + "\n" + i.Value.pricePerm + " GD")
+                    {
+                        ImageIndex = imageList1.Images.Count
+                    };
 
                     if (File.Exists(img))
                         imageList1.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
@@ -369,13 +546,13 @@ namespace WarZLocal_Admin
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadItemsDB();
+            LoadItemsDb();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             errorProvider1.SetError(textBox1, String.Empty);
-            LoadItemsDB();
+            LoadItemsDb();
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -398,7 +575,7 @@ namespace WarZLocal_Admin
                     currentRes = new Size(256, 256);
                 break;
             }
-            LoadItemsDB();
+            LoadItemsDb();
         }
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
@@ -422,7 +599,7 @@ namespace WarZLocal_Admin
                     break;
             }
 
-            LoadShopXML();
+            LoadShopXml();
         }
 
         public void LoadInformation(ListView obj)
@@ -430,12 +607,12 @@ namespace WarZLocal_Admin
             if (obj.SelectedIndices.Count == 1)
             {
                 panel1.Visible = true;
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.binding == obj.SelectedIndices[0])
                     {
-                        string price = i.Value.pricePerm + " GD";
-                        if (i.Value.pricePerm == 0)
+                        var price = i.Value.pricePerm + " GD";
+                        if (i.Value.pricePerm == -999 || i.Value.pricePerm == 0)
                         {
                             label4.Visible = false;
                             label7.Visible = false;
@@ -445,19 +622,19 @@ namespace WarZLocal_Admin
                             label4.Visible = true;
                             label7.Visible = true;
                         }
-                        string img = i.Value.image.Replace("$Data", Properties.Settings.Default.dataFolder);
-                        img = img.Replace(".dds", ".png");
+                        var img = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" +
+                                  i.Value.StoreIcon;
                         if (File.Exists(img))
                             pictureBox1.Image = ImageUtilities.getThumb((Bitmap)Image.FromFile(img),
                                 new Size(128, 128));
                         else
                             pictureBox1.Image = ImageUtilities.getThumb(Resources.no_icon, new Size(128, 128));
 
-                        label1.Text = i.Value.desc;
-                        label5.Text = i.Value.name + " (" + i.Value.itemID + ")";
-                        label6.Text = Helper.fromItemsCategory(i.Value.category);
-                        if (Helper.fromItemsCategory(i.Value.category) == "Unknown")
-                            Console.WriteLine(i.Value.name + " has an invalid category of " + i.Value.category);
+                        label1.Text = i.Value.Description;
+                        label5.Text = i.Value.Name + @" (" + i.Value.ItemID + @")";
+                        label6.Text = Helper.fromItemsCategory(i.Value.Category);
+                        if (Helper.fromItemsCategory(i.Value.Category) == "Unknown")
+                            Console.WriteLine(i.Value.Name + @" has an invalid category of " + i.Value.Category);
                         label7.Text = price;
                         break;
                     }
@@ -485,10 +662,10 @@ namespace WarZLocal_Admin
             switch (tabControl1.SelectedIndex)
             {
                 default:
-                    LoadItemsDB();
+                    LoadItemsDb();
                     break;
                 case 1:
-                    LoadShopXML();
+                    LoadShopXml();
                     break;
             }
         }
@@ -501,12 +678,12 @@ namespace WarZLocal_Admin
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            foreach (KeyValuePair<int, Items> i in itemsDB)
+            foreach (var i in itemsDB)
             {
                 if (i.Value.binding == listView2.SelectedIndices[0])
                 {
                     itemsDB.Remove(i.Key);
-                    LoadItemsDB();
+                    LoadItemsDb();
                     break;
                 }
             }
@@ -514,13 +691,13 @@ namespace WarZLocal_Admin
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            foreach (KeyValuePair<int, Items> i in itemsDB)
+            foreach (var i in itemsDB)
             {
                 if (i.Value.binding == listView2.SelectedIndices[0])
                 {
                     Items.showEditForm(i.Value);
 
-                    EditItem ei = new EditItem(i.Value);
+                    var ei = new EditItem(i.Value);
                     if (ei.ShowDialog() == DialogResult.OK)
                     {
                         itemsDB[i.Key] = ei.buffer;
@@ -535,16 +712,14 @@ namespace WarZLocal_Admin
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             XmlWriter writer;
-            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
-            xmlWriterSettings.NewLineOnAttributes = false;
-            xmlWriterSettings.Indent = true;
+            var xmlWriterSettings = new XmlWriterSettings {NewLineOnAttributes = false, Indent = true};
             if (tabControl1.SelectedIndex == 0)
             {
                 writer = XmlWriter.Create(@"D:\Server\Open-WarZ\source\bin\Data\Weapons\out.xml",
                     xmlWriterSettings);
                 writer.WriteStartElement("DB");
                 writer.WriteStartElement("WeaponsArmory");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.internalCategory == 0)
                         Weapon.writeXML(writer, i);
@@ -552,15 +727,15 @@ namespace WarZLocal_Admin
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("FoodArmory");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
-                    if (i.Value.category == 30 && i.Value.internalCategory == 4)
+                    if (i.Value.category == 30 || i.Value.Category == 33 && i.Value.internalCategory == 4)
                         Food.writeXML(writer, i);
                 }
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("GearArmory");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.category == 13 && i.Value.internalCategory == 1)
                         Gear.writeXML(writer, i);
@@ -568,7 +743,7 @@ namespace WarZLocal_Admin
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("HeroArmory");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.category == 16 && i.Value.internalCategory == 5)
                         Hero.writeXML(writer, i);
@@ -576,7 +751,7 @@ namespace WarZLocal_Admin
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("BackpackArmory");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.category == 12 && i.Value.internalCategory == 6)
                         Backpack.writeXML(writer, i);
@@ -584,7 +759,7 @@ namespace WarZLocal_Admin
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("ItemsDB");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.category == 1 && i.Value.internalCategory == 4)
                         Generic.writeXML(writer, i);
@@ -592,7 +767,7 @@ namespace WarZLocal_Admin
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("AttachmentArmory");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.category == 19 && i.Value.internalCategory == 2)
                         Attachment.writeXML(writer, i);
@@ -600,7 +775,7 @@ namespace WarZLocal_Admin
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("LootBoxDB");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.category == 7 && i.Value.internalCategory == 3)
                         Lootbox.writeXML(writer, i);
@@ -615,15 +790,15 @@ namespace WarZLocal_Admin
                 /***********/
                 writer = XmlWriter.Create(@"D:\Server\Open-WarZ\source\bin\Data\Weapons\out2.xml", xmlWriterSettings);
                 writer.WriteStartElement("shopInfo");
-                foreach (KeyValuePair<int, Items> i in itemsDB)
+                foreach (var i in itemsDB)
                 {
                     if (i.Value.pricePerm <= 0)
                         continue;
 
                     writer.WriteStartElement("si");
-                    writer.WriteAttributeString("itemId", i.Value.itemID.ToString());
+                    writer.WriteAttributeString("itemId", i.Value.itemID.ToString(CultureInfo.InvariantCulture));
                     writer.WriteAttributeString("pricePerm", "0");
-                    writer.WriteAttributeString("gdPricePerm", i.Value.pricePerm.ToString());
+                    writer.WriteAttributeString("gdPricePerm", i.Value.pricePerm.ToString(CultureInfo.InvariantCulture));
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -633,16 +808,17 @@ namespace WarZLocal_Admin
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings s = new Settings();
+            var s = new Settings();
             if (s.ShowDialog() == DialogResult.OK)
             {
+                listView2.Font = Properties.Settings.Default.listFont;
                 switch (tabControl1.SelectedIndex)
                 {
                     default:
-                        LoadItemsDB();
+                        LoadItemsDb();
                         break;
                     case 1:
-                        LoadShopXML();
+                        LoadShopXml();
                         break;
                 }
             }
@@ -650,27 +826,26 @@ namespace WarZLocal_Admin
 
         private void importItemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog of = new OpenFileDialog();
-            of.Filter = "ItemsDB.xml|itemsDB.xml";
-            of.InitialDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var of = new OpenFileDialog
+            {
+                Filter = @"ItemsDB.xml|itemsDB.xml",
+                InitialDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+            };
             if (of.ShowDialog() != DialogResult.OK)
                 return;
-            Panel tp = new Panel();
-            tp.Size = Size;
-            tp.Location = new Point(0, 0);
-            tp.BackColor = SystemColors.Control;
+            var tp = new Panel {Size = Size, Location = new Point(0, 0), BackColor = SystemColors.Control};
 
-            LoadingCircle lc = new LoadingCircle();
-            lc.ThemeColor = Color.DodgerBlue;
-            lc.OutnerCircleRadius = 30;
-            lc.InnerCircleRadius = 10;
-            lc.LineWidth = 3;
-            lc.Size = new Size(64, 64);
+            var lc = new LoadingCircle
+            {
+                ThemeColor = Color.DodgerBlue,
+                OutnerCircleRadius = 30,
+                InnerCircleRadius = 10,
+                LineWidth = 3,
+                Size = new Size(64, 64)
+            };
             lc.Location = new Point((Size.Width / 2) - lc.Size.Width, (Size.Height / 2) - lc.Size.Height);
 
-            Label lb = new Label();
-            lb.Text = "Import your items...";
-            lb.AutoSize = true;
+            var lb = new Label {Text = "Import your items...", AutoSize = true};
             lb.SizeChanged += (EventHandler)((s, ev) => { lb.Location = new Point((Size.Width / 2) - (lb.Size.Width/2) - 20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2)); });
             lb.Location = new Point((Size.Width / 2) - (lb.Size.Width /2)-20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2));
 
@@ -690,7 +865,7 @@ namespace WarZLocal_Admin
                     lb.Text = "Loading items from XML...";
                 }));
 
-                using (XmlReader reader = XmlReader.Create(of.FileName))
+                using (var reader = XmlReader.Create(of.FileName))
                 {
                     try
                     {
@@ -704,68 +879,63 @@ namespace WarZLocal_Admin
                                 default:
                                     continue;
                                 case "Attachment":
-                                    Attachment attach = Attachment.readXML(reader);
-                                    attachments.Add(attach.ItemID, attach);
+                                    var attach = Attachment.readXML(reader);
+
+                                    if (!attachments.ContainsKey(attach.ItemID))
+                                        attachments.Add(attach.ItemID, attach);
                                     break;
                                 case "Backpack":
-                                    Gear _backpack = Gear.readXML(reader);
-                                    gears.Add(_backpack.ItemID, _backpack);
+                                    var _backpack = Gear.readXML(reader);
+
+                                    if (!gears.ContainsKey(_backpack.ItemID))
+                                        gears.Add(_backpack.ItemID, _backpack);
                                     break;
                                 case "Item":
                                     // Hack because of several items.
                                     // 1 - Generic
                                     // 30 - Food
-                                    int cat = Helper.getInt(reader.GetAttribute(1));
+                                    var cat = Helper.getInt(reader.GetAttribute(1));
                                     //i =  cat == 1 ? Generic.readXML(reader) : Food.readXML(reader);
 
                                     if (cat == 1)
                                     {
-                                        Generic _generic = Generic.readXML(reader);
-                                        generics.Add(_generic.ItemID, _generic);
+                                        var _generic = Generic.readXML(reader);
+
+                                        if (!generics.ContainsKey(_generic.ItemID))
+                                            generics.Add(_generic.ItemID, _generic);
                                     }
-                                    else if (cat == 30)
+                                    else if (cat == 30 || cat == 33)
                                     {
-                                        Weapon wSQL = Weapon.readXML(reader);
-                                        weapons.Add(wSQL.ItemID, wSQL);
+                                        var wSQL = Weapon.readXML(reader);
+
+                                        if (!weapons.ContainsKey(wSQL.ItemID))
+                                            weapons.Add(wSQL.ItemID, wSQL);
                                     }
                                     break;
                                 case "Gear":
-                                    Gear _gear = Gear.readXML(reader);
-                                    gears.Add(_gear.ItemID, _gear);
+                                    var _gear = Gear.readXML(reader);
+
+                                    if (!gears.ContainsKey(_gear.ItemID))
+                                        gears.Add(_gear.ItemID, _gear);
                                     break;
                                 case "Hero":
-                                    Gear _hero = Gear.readXML(reader);
-                                    gears.Add(_hero.ItemID, _hero);
+                                    var _hero = Gear.readXML(reader);
+
+                                    if (!gears.ContainsKey(_hero.ItemID))
+                                        gears.Add(_hero.ItemID, _hero);
                                     break;
                                 case "LootBox":
-                                    Generic _lootbox = Generic.readXML(reader);
-                                    generics.Add(_lootbox.ItemID, _lootbox);
+                                    var _lootbox = Generic.readXML(reader);
+
+                                    if (!generics.ContainsKey(_lootbox.ItemID))
+                                        generics.Add(_lootbox.ItemID, _lootbox);
                                     break;
                                 case "Weapon":
-                                    Weapon wSQL2 = Weapon.readXML(reader);
+                                    var wSQL2 = Weapon.readXML(reader);
                                     //WeaponSQL wSQL2 = WeaponSQL.Add(db, i);
 
-                                    weapons.Add(wSQL2.ItemID, wSQL2); // Bugfix
-
-                                    /*i.binding = listView2.Items.Count;
-
-                                itemsDB.Add(i.itemID, i);
-                                string icon = i.image;
-
-                                icon = icon.Replace("$Data", Properties.Settings.Default.dataFolder);
-                                icon = icon.Replace(".dds", ".png");
-                                //DDSImage img = new DDSImage(File.ReadAllBytes(icon));
-
-                                ListViewItem lvi = new ListViewItem(i.name + "\n(" + i.itemID + ")");
-                                lvi.ImageIndex = imageList2.Images.Count;
-
-                                if (File.Exists(icon))
-                                    imageList2.Images.Add(ImageUtilities.getThumb((Bitmap) Image.FromFile(icon),
-                                        currentRes));
-                                else
-                                    lvi.ImageIndex = 0;
-
-                                listView2.Items.Add(lvi);*/
+                                    if(!weapons.ContainsKey(wSQL2.ItemID))
+                                        weapons.Add(wSQL2.ItemID, wSQL2); // Bugfix
 
                                     break;
                             }
@@ -778,9 +948,9 @@ namespace WarZLocal_Admin
                     }
                 }
 
-                foreach (KeyValuePair<int, Attachment> a in attachments)
+                foreach (var a in attachments)
                 {
-                    int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Attachment WHERE itemID=?", a.Value.ItemID);
+                    var count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Attachment WHERE itemID=?", a.Value.ItemID);
                     if (count == 0)
                     {
                         db.Insert(a.Value);
@@ -792,9 +962,9 @@ namespace WarZLocal_Admin
                     }
                 }
 
-                foreach (KeyValuePair<int, Gear> g in gears)
+                foreach (var g in gears)
                 {
-                    int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Gear WHERE itemID=?", g.Value.ItemID);
+                    var count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Gear WHERE itemID=?", g.Value.ItemID);
                     if (count == 0)
                     {
                         db.Insert(g.Value);
@@ -806,9 +976,9 @@ namespace WarZLocal_Admin
                     }
                 }
 
-                foreach (KeyValuePair<int, Generic> g in generics)
+                foreach (var g in generics)
                 {
-                    int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Generic WHERE itemID=?", g.Value.ItemID);
+                    var count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Generic WHERE itemID=?", g.Value.ItemID);
                     if (count == 0)
                     {
                         db.Insert(g.Value);
@@ -820,9 +990,9 @@ namespace WarZLocal_Admin
                     }
                 }
 
-                foreach (KeyValuePair<int, Weapon> w in weapons)
+                foreach (var w in weapons)
                 {
-                    int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Weapon WHERE itemID=?", w.Value.ItemID);
+                    var count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Weapon WHERE itemID=?", w.Value.ItemID);
                     if (count == 0)
                     {
                         db.Insert(w.Value);
@@ -848,6 +1018,11 @@ namespace WarZLocal_Admin
         {
             if(temp_thread != null && temp_thread.ThreadState == ThreadState.Running)
                 temp_thread.Abort();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
