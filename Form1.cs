@@ -38,10 +38,16 @@ namespace WarZLocal_Admin
         private SQLiteConnection db;
         private Thread temp_thread;
 
+        private Info inf;
+
         private Size currentRes = new Size(128, 128);
         private Size currentRes2 = new Size(128, 128);
         private void Form1_Load(object sender, EventArgs e)
         {
+            inf = new Info();
+            inf.Show();
+            inf.Location = new Point(Location.X + Size.Width + 5, Location.Y + 5);
+
             //comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 1;
             comboBox3.SelectedIndex = 1;
@@ -97,6 +103,8 @@ namespace WarZLocal_Admin
                     loadingCircle1.Visible = true;
                     loadingCircle1.Start();
                     label8.Text = "Loading Items from Database...";
+                    TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
+                    TaskbarProgress.SetValue(Handle, 100, 100);
                 }));
 
                 var att = db.Table<Attachment>();
@@ -113,7 +121,8 @@ namespace WarZLocal_Admin
                         FNAME = val.FNAME,
                         Name = val.Name,
                         StoreIcon = val.FNAME + ".png",
-                        Description = val.Description
+                        Description = val.Description,
+                        ModelFile = val.ModelFile
                     };
                     itemsDB.Add(val.ItemID, it);
                 }
@@ -237,6 +246,11 @@ namespace WarZLocal_Admin
 
                     loadingCircle1.Stop();
                     loadingCircle1.Visible = false;
+
+                    TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.NoProgress);
+
+                    listView2.SelectedIndices.Add(0);
+                    LoadInformation(listView2);
                 }));
             }));
             temp_thread.Start();
@@ -263,12 +277,64 @@ namespace WarZLocal_Admin
                 if (textBox1.Text != "")
                 {
                     const string vars = "img|i|n|d|c";
-                    const string ops = "\\$|!\\$|&|!&|!=|<=|>=|=|>|<";
+                    const string ops = "\\$|!\\$|!=|<=|>=|=|>|<";
 
+                    const string vars2 = "img|m";
+                    const string ops2 = "&|!&";
+
+                    var matchExists = Regex.Match(textBox1.Text, "(" + vars2 + ")(" + ops2 + ")").Success;
                     var match = Regex.Match(textBox1.Text, "(" + vars + ")(" + ops + ")\"(.*?)\"").Success;
                     var match3 = Regex.Match(textBox1.Text, "(" + vars + ")(" + ops + ")(.*?)").Success;
                     var match2 = Regex.Match(textBox1.Text, "\"(.*?)\"").Success;
-                    if (match || match3)
+
+                    if (matchExists)
+                    {
+                        var m = Regex.Matches(textBox1.Text, "(" + vars2 + ")(" + ops2 + ")");
+                        var m1 = m[0].Groups[1].Value;
+                        var m2 = m[0].Groups[2].Value;
+
+                        string compareString = "";
+                        switch (m1)
+                        {
+                            case "img":
+                                compareString = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon;
+                                if (string.IsNullOrEmpty(i.Value.StoreIcon))
+                                    continue;
+                                break;
+                            case "m":
+                                compareString = Properties.Settings.Default.dataFolder + i.Value.ModelFile;
+                                if (string.IsNullOrEmpty(i.Value.ModelFile))
+                                    continue;
+                                break;
+                        }
+
+                        switch (m2)
+                        {
+                            case "&":
+                                if (!string.IsNullOrEmpty(compareString))
+                                    checkForText =
+                                        File.Exists(
+                                            Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon);
+                                else
+                                {
+                                    errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
+                                    errorProvider1.SetError(textBox1, "No valid operator found!");
+                                }
+                            break;
+                            case "!&":
+                                if (!string.IsNullOrEmpty(compareString))
+                                    checkForText =
+                                        !File.Exists(
+                                            Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon);
+                                else
+                                {
+                                    errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
+                                    errorProvider1.SetError(textBox1, "No valid operator found!");
+                                    continue;
+                                }
+                            break;
+                        }
+                    }else if (match || match3)
                     {
                         var m = Regex.Matches(textBox1.Text, "(" + vars + ")(" + ops + ")\"(.*?)\"");
                         var mc2 = Regex.Matches(textBox1.Text, "(" + vars + ")(" + ops + ")(.*?)");
@@ -306,11 +372,6 @@ namespace WarZLocal_Admin
                                 if (string.IsNullOrEmpty(i.Value.Description))
                                     continue;
                                 break;
-                            case "img":
-                                compareString = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon;
-                                if (string.IsNullOrEmpty(i.Value.StoreIcon))
-                                    continue;
-                                break;
                             case "c":
                                 if(number != -999)
                                     compareInt = i.Value.Category;
@@ -326,29 +387,6 @@ namespace WarZLocal_Admin
                                 errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
                                 errorProvider1.SetError(textBox1, "No valid operator found!");
                                 return;
-                            case "&":
-                                if (!string.IsNullOrEmpty(compareString))
-                                    checkForText =
-                                        File.Exists(
-                                            Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon);
-                                else
-                                {
-                                    errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
-                                    errorProvider1.SetError(textBox1, "No valid operator found!");
-                                }
-                                break;
-                            case "!&":
-                                if (!string.IsNullOrEmpty(compareString))
-                                    checkForText =
-                                        !File.Exists(
-                                            Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + i.Value.StoreIcon);
-                                else
-                                {
-                                    errorProvider1.SetIconAlignment(textBox1, ErrorIconAlignment.MiddleLeft);
-                                    errorProvider1.SetError(textBox1, "No valid operator found!");
-                                    continue;
-                                }
-                                break;
                             case "$":
                                 if (!string.IsNullOrEmpty(compareString))
                                     checkForText = compareString.Contains(text);
@@ -607,7 +645,10 @@ namespace WarZLocal_Admin
         {
             if (obj.SelectedIndices.Count == 1)
             {
-                panel1.Visible = true;
+                //tabControl1.Size = new Size(710, 541);
+                /*Size = new Size(1354, 608);
+                panel1.Visible = true;*/
+
                 foreach (var i in itemsDB)
                 {
                     if (i.Value.binding == obj.SelectedIndices[0])
@@ -637,12 +678,16 @@ namespace WarZLocal_Admin
                         if (Helper.fromItemsCategory(i.Value.Category) == "Unknown")
                             Console.WriteLine(i.Value.Name + @" has an invalid category of " + i.Value.Category);
                         label7.Text = price;
+
+                        inf.ChangeItem(i);
                         break;
                     }
                 }
             }
             else
             {
+                //tabControl1.Size = new Size(1017, 541);
+                Size = new Size(1045, 608);
                 panel1.Visible = false;
                 pictureBox1.Image = ImageUtilities.getThumb(Resources.no_icon, new Size(128, 128));
             }
@@ -1017,13 +1062,40 @@ namespace WarZLocal_Admin
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(temp_thread != null && temp_thread.ThreadState == ThreadState.Running)
-                temp_thread.Abort();
+            while (temp_thread != null && temp_thread.ThreadState == ThreadState.Running)
+            {
+                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
+                Hide();
+                if (inf != null)
+                    inf.Hide();
+                Thread.Sleep(1500);
+            }
+
+            Environment.Exit(0);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void Form1_Move(object sender, EventArgs e)
+        {
+            if (inf != null)
+            {
+                inf.Location = new Point(Location.X + Size.Width + 5, Location.Y + 5);
+            }
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            tabControl1.Size = new Size(Size.Width - 30, Size.Height - toolStrip1.Size.Height - 43);
+            splitContainer1.SplitterDistance = 0;
+            if (inf != null)
+            {
+                inf.Location = new Point(Location.X + Size.Width + 5, Location.Y + 5);
+                inf.Size = new Size(inf.Size.Width, Size.Height - 8);
+            }
         }
     }
 }

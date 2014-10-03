@@ -15,6 +15,8 @@ namespace WarZLocal_Admin
         public string Name { get; set; }
         [MaxLength(256)]
         public string Description { get; set; }
+        [MaxLength(256)]
+        public string ModelFile { get; set; }
         [MaxLength(64)]
         public string MuzzleParticle { get; set; }
         [MaxLength(256)]
@@ -67,7 +69,7 @@ namespace WarZLocal_Admin
                 switch (subs.Name)
                 {
                     case "Model":
-                        //i.modelFile = subs.GetAttribute(0);
+                        i.ModelFile = subs.GetAttribute(0);
                         i.FNAME = Path.GetFileNameWithoutExtension(subs.GetAttribute(0));
                         i.MuzzleParticle = subs.GetAttribute(1);
                         i.FireSound = subs.GetAttribute(2);

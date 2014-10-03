@@ -54,6 +54,15 @@
     <Reference Include="Ionic.Zip">
       <HintPath>..\packages\DotNetZip.1.9.3\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack">
+      <HintPath>packages\Microsoft.WindowsAPICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+      <HintPath>packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions">
+      <HintPath>packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -66,7 +75,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DDSImage.cs" />
+    <Compile Include="ActiveButton\Controls\ActiveButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ActiveButton\Controls\ActiveItemsImpl.cs" />
+    <Compile Include="ActiveButton\Controls\ActiveMenu.cs" />
+    <Compile Include="ActiveButton\Controls\ActiveMenuImpl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ActiveButton\Controls\IActiveItem.cs" />
+    <Compile Include="ActiveButton\Controls\IActiveItems.cs" />
+    <Compile Include="ActiveButton\Controls\IActiveMenu.cs" />
+    <Compile Include="ActiveButton\Controls\SpillOverMode.cs" />
+    <Compile Include="ActiveButton\Controls\ThemedItem.cs" />
+    <Compile Include="ActiveButton\Controls\Themes\Aero.cs" />
+    <Compile Include="ActiveButton\Controls\Themes\ITheme.cs" />
+    <Compile Include="ActiveButton\Controls\Themes\Standard.cs" />
+    <Compile Include="ActiveButton\Controls\Themes\Styled.cs" />
+    <Compile Include="ActiveButton\Controls\Themes\ThemeBase.cs" />
+    <Compile Include="ActiveButton\Controls\Themes\ThemeFactory.cs" />
+    <Compile Include="ActiveButton\Controls\Themes\XPStyle.cs" />
+    <Compile Include="ActiveButton\Utils\ListWithEvents.cs" />
+    <Compile Include="ActiveButton\Utils\Win32.cs" />
+    <Compile Include="Controls\TaskbarProgress.cs" />
+    <Compile Include="Helpers\DDSImage.cs" />
     <Compile Include="EditItem.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,8 +111,14 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helper.cs" />
-    <Compile Include="Items.cs" />
+    <Compile Include="Helpers\Helper.cs" />
+    <Compile Include="Helpers\Items.cs" />
+    <Compile Include="Info.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Info.Designer.cs">
+      <DependentUpon>Info.cs</DependentUpon>
+    </Compile>
     <Compile Include="Items\Attachment.cs" />
     <Compile Include="Items\Backpack.cs" />
     <Compile Include="Items\Food.cs" />
@@ -89,10 +127,10 @@
     <Compile Include="Items\Hero.cs" />
     <Compile Include="Items\Lootbox.cs" />
     <Compile Include="Items\Weapon.cs" />
-    <Compile Include="LoadingCircle.cs">
+    <Compile Include="Controls\LoadingCircle.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="LoadingCircle.Designer.cs">
+    <Compile Include="Controls\LoadingCircle.Designer.cs">
       <DependentUpon>LoadingCircle.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -103,12 +141,12 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="SQLite.cs" />
-    <Compile Include="SQLiteAsync.cs" />
-    <Compile Include="TransparentPanel.cs">
+    <Compile Include="Helpers\SQLite.cs" />
+    <Compile Include="Helpers\SQLiteAsync.cs" />
+    <Compile Include="Controls\TransparentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TransparentPanel.Designer.cs">
+    <Compile Include="Controls\TransparentPanel.Designer.cs">
       <DependentUpon>TransparentPanel.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="EditItem.resx">
@@ -116,6 +154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Info.resx">
+      <DependentUpon>Info.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -154,6 +195,7 @@
   <ItemGroup>
     <None Include="Resources\no_icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
