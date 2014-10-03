@@ -42,6 +42,7 @@ namespace WarZLocal_Admin
 
         private Size currentRes = new Size(128, 128);
         private Size currentRes2 = new Size(128, 128);
+
         private void Form1_Load(object sender, EventArgs e)
         {
             inf = new Info();
@@ -96,164 +97,15 @@ namespace WarZLocal_Admin
 
             /* ----------------- */
 
-            temp_thread = new Thread((() =>
+            if (Properties.Settings.Default.populateInUI)
             {
-                loadingCircle1.Invoke((MethodInvoker)(() =>
-                {
-                    loadingCircle1.Visible = true;
-                    loadingCircle1.Start();
-                    label8.Text = "Loading Items from Database...";
-                    TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
-                    TaskbarProgress.SetValue(Handle, 100, 100);
-                }));
-
-                var att = db.Table<Attachment>();
-                foreach (var val in att)
-                {
-                    label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Attachment \"" + val.Name + "\"..."));
-
-                    attachments.Add(val.ItemID, val);
-
-                    var it = new Items
-                    {
-                        ItemID = val.ItemID,
-                        Category = val.Category,
-                        FNAME = val.FNAME,
-                        Name = val.Name,
-                        StoreIcon = val.FNAME + ".png",
-                        Description = val.Description,
-                        ModelFile = val.ModelFile
-                    };
-                    itemsDB.Add(val.ItemID, it);
-                }
-
-                var ge = db.Table<Gear>();
-                foreach (var val in ge)
-                {
-                    label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Gear \"" + val.Name + "\"..."));
-
-                    gears.Add(val.ItemID, val);
-
-                    var it = new Items
-                    {
-                        ItemID = val.ItemID,
-                        Category = val.Category,
-                        FNAME = val.FNAME,
-                        Name = val.Name,
-                        StoreIcon = val.FNAME + ".png",
-                        Description = val.Description
-                    };
-                    itemsDB.Add(val.ItemID, it);
-                }
-
-                var gen = db.Table<Generic>();
-                foreach (var val in gen)
-                {
-                    label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Generic \"" + val.Name + "\"..."));
-
-                    generics.Add(val.ItemID, val);
-
-                    var it = new Items
-                    {
-                        ItemID = val.ItemID,
-                        Category = val.Category,
-                        FNAME = val.FNAME,
-                        Name = val.Name,
-                        StoreIcon = val.FNAME + ".png",
-                        Description = val.Description
-                    };
-                    itemsDB.Add(val.ItemID, it);
-                }
-
-                var lvil = new List<ListViewItem>();
-                var weap = db.Table<Weapon>();
-                foreach (var val in weap)
-                {
-                    label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Weapon \"" + val.Name + "\"..."));
-
-                    weapons.Add(val.ItemID, val);
-
-                    var it = new Items
-                    {
-                        ItemID = val.ItemID,
-                        Category = val.Category,
-                        FNAME = val.FNAME,
-                        Name = val.Name,
-                        StoreIcon = val.FNAME + ".png",
-                        Description = val.Description
-                    };
-                    itemsDB.Add(val.ItemID, it);
-                }
-
-                label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Shop Database..."));
-                
-                using (var reader = XmlReader.Create(Properties.Settings.Default.shopDBFile))
-                {
-                    while (reader.Read())
-                    {
-                        if (reader.Name == "si" && reader.IsStartElement())
-                        {
-                            int itemId;
-                            int price;
-                            int.TryParse(reader.GetAttribute(0), out itemId);
-                            int.TryParse(reader.GetAttribute(1), out price);
-
-                            if (price == 0)
-                                int.TryParse(reader.GetAttribute(2), out price);
-
-                            if (!itemsDB.ContainsKey(itemId))
-                                continue;
-
-                            var i = itemsDB[itemId];
-                            i.pricePerm = price;
-                        }
-                    }
-                }
-
-                label8.Invoke((MethodInvoker)(() => label8.Text = "Adding Items to cache..."));
-                foreach (var item in itemsDB)
-                {
-                    /*const int cat = 1;
-                    if (cat == item.Value.Category)
-                    {*/
-                        if (string.IsNullOrEmpty(item.Value.Name))
-                            item.Value.Name = item.Value.FNAME;
-                        var lvi = new ListViewItem(item.Value.Name + "\n(" + item.Value.ItemID + ")")
-                        {
-                            ImageIndex = imageList2.Images.Count
-                        };
-
-                        if(Properties.Settings.Default.showColorsEverything)
-                            lvi.ForeColor = Helper.getCategoryColor(item.Value.Category);
-
-                        item.Value.binding = lvil.Count;
-
-                        string img = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + item.Value.StoreIcon;
-                        if (File.Exists(img))
-                            imageList2.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile(img), currentRes));
-                        else
-                            lvi.ImageIndex = 0;
-
-                        //listView2.Items.Add(lvi);
-                        lvil.Add(lvi);
-                    //}
-                }
-
-                loadingCircle1.Invoke((MethodInvoker)(() =>
-                {
-                    label8.Text = "Finishing...";
-                    listView2.Items.AddRange(lvil.ToArray());
-
-                    loadingCircle1.Stop();
-                    loadingCircle1.Visible = false;
-
-                    TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.NoProgress);
-
-                    listView2.SelectedIndices.Add(0);
-                    LoadInformation(listView2);
-                }));
-            }));
-            temp_thread.Start();
+                temp_thread = new Thread((PopulateItems));
+                temp_thread.Start();
+            }
+            else
+            {
+                PopulateItems();
+            }
         }
 
         public void LoadItemsDb()
@@ -870,7 +722,207 @@ namespace WarZLocal_Admin
             }
         }
 
-        private void importItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            while (temp_thread != null && temp_thread.ThreadState == ThreadState.Running)
+            {
+                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
+                Hide();
+                if (inf != null)
+                    inf.Hide();
+                Thread.Sleep(1500);
+            }
+
+            Environment.Exit(0);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void Form1_Move(object sender, EventArgs e)
+        {
+            if (inf != null)
+            {
+                inf.Location = new Point(Location.X + Size.Width + 5, Location.Y + 5);
+            }
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            tabControl1.Size = new Size(Size.Width - 30, Size.Height - toolStrip1.Size.Height - 43);
+            if (inf != null)
+            {
+                inf.Location = new Point(Location.X + Size.Width + 5, Location.Y + 5);
+                inf.Size = new Size(inf.Size.Width, Size.Height - 8);
+            }
+        }
+
+        private void PopulateItems()
+        {
+            loadingCircle1.Invoke((MethodInvoker)(() =>
+            {
+                loadingCircle1.Visible = true;
+                loadingCircle1.Start();
+                label8.Text = "Loading Items from Database...";
+                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Normal);
+                TaskbarProgress.SetValue(Handle, 100, 100);
+            }));
+
+            var att = db.Table<Attachment>();
+            foreach (var val in att)
+            {
+                label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Attachment \"" + val.Name + "\"..."));
+
+                attachments.Add(val.ItemID, val);
+
+                var it = new Items
+                {
+                    ItemID = val.ItemID,
+                    Category = val.Category,
+                    FNAME = val.FNAME,
+                    Name = val.Name,
+                    StoreIcon = val.FNAME + ".png",
+                    Description = val.Description,
+                    ModelFile = val.ModelFile
+                };
+                itemsDB.Add(val.ItemID, it);
+            }
+
+            var ge = db.Table<Gear>();
+            foreach (var val in ge)
+            {
+                label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Gear \"" + val.Name + "\"..."));
+
+                gears.Add(val.ItemID, val);
+
+                var it = new Items
+                {
+                    ItemID = val.ItemID,
+                    Category = val.Category,
+                    FNAME = val.FNAME,
+                    Name = val.Name,
+                    StoreIcon = val.FNAME + ".png",
+                    Description = val.Description
+                };
+                itemsDB.Add(val.ItemID, it);
+            }
+
+            var gen = db.Table<Generic>();
+            foreach (var val in gen)
+            {
+                label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Generic \"" + val.Name + "\"..."));
+
+                generics.Add(val.ItemID, val);
+
+                var it = new Items
+                {
+                    ItemID = val.ItemID,
+                    Category = val.Category,
+                    FNAME = val.FNAME,
+                    Name = val.Name,
+                    StoreIcon = val.FNAME + ".png",
+                    Description = val.Description
+                };
+                itemsDB.Add(val.ItemID, it);
+            }
+
+            var lvil = new List<ListViewItem>();
+            var weap = db.Table<Weapon>();
+            foreach (var val in weap)
+            {
+                label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Weapon \"" + val.Name + "\"..."));
+
+                weapons.Add(val.ItemID, val);
+
+                var it = new Items
+                {
+                    ItemID = val.ItemID,
+                    Category = val.Category,
+                    FNAME = val.FNAME,
+                    Name = val.Name,
+                    StoreIcon = val.FNAME + ".png",
+                    Description = val.Description
+                };
+                itemsDB.Add(val.ItemID, it);
+            }
+
+            label8.Invoke((MethodInvoker)(() => label8.Text = "Loading Shop Database..."));
+
+            using (var reader = XmlReader.Create(Properties.Settings.Default.shopDBFile))
+            {
+                while (reader.Read())
+                {
+                    if (reader.Name == "si" && reader.IsStartElement())
+                    {
+                        int itemId;
+                        int price;
+                        int.TryParse(reader.GetAttribute(0), out itemId);
+                        int.TryParse(reader.GetAttribute(1), out price);
+
+                        if (price == 0)
+                            int.TryParse(reader.GetAttribute(2), out price);
+
+                        if (!itemsDB.ContainsKey(itemId))
+                            continue;
+
+                        var i = itemsDB[itemId];
+                        i.pricePerm = price;
+                    }
+                }
+            }
+
+            label8.Invoke((MethodInvoker)(() => label8.Text = "Adding Items to cache..."));
+            foreach (var item in itemsDB)
+            {
+                /*const int cat = 1;
+                if (cat == item.Value.Category)
+                {*/
+                if (string.IsNullOrEmpty(item.Value.Name))
+                    item.Value.Name = item.Value.FNAME;
+                var lvi = new ListViewItem(item.Value.Name + "\n(" + item.Value.ItemID + ")")
+                {
+                    ImageIndex = imageList2.Images.Count
+                };
+
+                if (Properties.Settings.Default.showColorsEverything)
+                    lvi.ForeColor = Helper.getCategoryColor(item.Value.Category);
+
+                item.Value.binding = lvil.Count;
+
+                string img = Properties.Settings.Default.dataFolder + "\\Weapons\\StoreIcons\\" + item.Value.StoreIcon;
+                if (File.Exists(img))
+                    imageList2.Images.Add(ImageUtilities.getThumb((Bitmap)Image.FromFile(img), currentRes));
+                else
+                    lvi.ImageIndex = 0;
+
+                //listView2.Items.Add(lvi);
+                lvil.Add(lvi);
+                //}
+            }
+
+            loadingCircle1.Invoke((MethodInvoker)(() =>
+            {
+                label8.Text = "Finishing...";
+                listView2.Items.AddRange(lvil.ToArray());
+
+                loadingCircle1.Stop();
+                loadingCircle1.Visible = false;
+
+                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.NoProgress);
+
+                listView2.SelectedIndices.Add(0);
+                LoadInformation(listView2);
+            }));
+        }
+
+        private void fromURLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ImportItems("http://127.0.0.1:8080/api/GetItemsDB.php?serverkey=8B1E58D9-1D8A-4942-A2AB-B6809F0A4CDF");
+        }
+
+        private void importItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             var of = new OpenFileDialog
             {
@@ -879,7 +931,13 @@ namespace WarZLocal_Admin
             };
             if (of.ShowDialog() != DialogResult.OK)
                 return;
-            var tp = new Panel {Size = Size, Location = new Point(0, 0), BackColor = SystemColors.Control};
+
+            ImportItems(of.FileName);
+        }
+
+        private void ImportItems(string xmlFile)
+        {
+            var tp = new Panel { Size = Size, Location = new Point(0, 0), BackColor = SystemColors.Control };
 
             var lc = new LoadingCircle
             {
@@ -891,9 +949,9 @@ namespace WarZLocal_Admin
             };
             lc.Location = new Point((Size.Width / 2) - lc.Size.Width, (Size.Height / 2) - lc.Size.Height);
 
-            var lb = new Label {Text = "Import your items...", AutoSize = true};
-            lb.SizeChanged += (EventHandler)((s, ev) => { lb.Location = new Point((Size.Width / 2) - (lb.Size.Width/2) - 20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2)); });
-            lb.Location = new Point((Size.Width / 2) - (lb.Size.Width /2)-20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2));
+            var lb = new Label { Text = "Import your items...", AutoSize = true };
+            lb.SizeChanged += (EventHandler)((s, ev) => { lb.Location = new Point((Size.Width / 2) - (lb.Size.Width / 2) - 20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2)); });
+            lb.Location = new Point((Size.Width / 2) - (lb.Size.Width / 2) - 20, ((Size.Height / 2) - lb.Size.Height) + (lc.Size.Height / 2));
 
             temp_thread = new Thread((() =>
             {
@@ -911,7 +969,7 @@ namespace WarZLocal_Admin
                     lb.Text = "Loading items from XML...";
                 }));
 
-                using (var reader = XmlReader.Create(of.FileName))
+                using (var reader = XmlReader.Create(xmlFile))
                 {
                     try
                     {
@@ -980,7 +1038,7 @@ namespace WarZLocal_Admin
                                     var wSQL2 = Weapon.readXML(reader);
                                     //WeaponSQL wSQL2 = WeaponSQL.Add(db, i);
 
-                                    if(!weapons.ContainsKey(wSQL2.ItemID))
+                                    if (!weapons.ContainsKey(wSQL2.ItemID))
                                         weapons.Add(wSQL2.ItemID, wSQL2); // Bugfix
 
                                     break;
@@ -1003,7 +1061,7 @@ namespace WarZLocal_Admin
                         Console.WriteLine("New Attachment itemID: {0}", a.Value.ItemID);
                         Invoke((MethodInvoker)(() =>
                         {
-                            lb.Text = "Adding Attachment \""+a.Value.Name+"\" ("+a.Value.ItemID+")...";
+                            lb.Text = "Adding Attachment \"" + a.Value.Name + "\" (" + a.Value.ItemID + ")...";
                         }));
                     }
                 }
@@ -1031,7 +1089,7 @@ namespace WarZLocal_Admin
                         Console.WriteLine("New Generic itemID: {0}", g.Value.ItemID);
                         Invoke((MethodInvoker)(() =>
                         {
-                            lb.Text = "Adding Generic \""+g.Value.Name+"\" ("+g.Value.ItemID+")...";
+                            lb.Text = "Adding Generic \"" + g.Value.Name + "\" (" + g.Value.ItemID + ")...";
                         }));
                     }
                 }
@@ -1045,7 +1103,7 @@ namespace WarZLocal_Admin
                         Console.WriteLine("New Weapon itemID: {0}", w.Value.ItemID);
                         Invoke((MethodInvoker)(() =>
                         {
-                            lb.Text = "Adding Weapon \""+w.Value.Name+"\" ("+w.Value.ItemID+")...";
+                            lb.Text = "Adding Weapon \"" + w.Value.Name + "\" (" + w.Value.ItemID + ")...";
                         }));
                     }
                 }
@@ -1058,44 +1116,6 @@ namespace WarZLocal_Admin
                 }));
             }));
             temp_thread.Start();
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            while (temp_thread != null && temp_thread.ThreadState == ThreadState.Running)
-            {
-                TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.Error);
-                Hide();
-                if (inf != null)
-                    inf.Hide();
-                Thread.Sleep(1500);
-            }
-
-            Environment.Exit(0);
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Environment.Exit(0);
-        }
-
-        private void Form1_Move(object sender, EventArgs e)
-        {
-            if (inf != null)
-            {
-                inf.Location = new Point(Location.X + Size.Width + 5, Location.Y + 5);
-            }
-        }
-
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            tabControl1.Size = new Size(Size.Width - 30, Size.Height - toolStrip1.Size.Height - 43);
-            splitContainer1.SplitterDistance = 0;
-            if (inf != null)
-            {
-                inf.Location = new Point(Location.X + Size.Width + 5, Location.Y + 5);
-                inf.Size = new Size(inf.Size.Width, Size.Height - 8);
-            }
         }
     }
 }

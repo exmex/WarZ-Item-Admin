@@ -323,5 +323,18 @@ namespace WarZLocal_Admin
                 label15.Text = "Current font:" + Environment.NewLine + Properties.Settings.Default.listFont.Name + " (" + Properties.Settings.Default.listFont.Size + ")";
             }
         }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+                if (MessageBox.Show(
+                    "This option is definitely not recommend!\nIt'll cause the form to freeze at startup\nIgnore this warning?",
+                    "Recommend Option", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                    Properties.Settings.Default.populateInUI = true;
+            else
+            {
+                Properties.Settings.Default.populateInUI = false;
+            }
+        }
     }
 }
