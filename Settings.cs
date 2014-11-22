@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Win32;
 using System.IO.Compression;
+using System.Security.Cryptography;
 
 namespace WarZLocal_Admin
 {
@@ -95,6 +96,18 @@ namespace WarZLocal_Admin
                     return;
                 }
                 Directory.Delete(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Data", true);
+            }
+
+            if (File.Exists(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Data.zip"))
+            {
+                using (var md5 = MD5.Create())
+                {
+                    using (var stream = File.OpenRead(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Data.zip"))
+                    {
+                        MessageBox.Show(md5.ComputeHash(stream).ToString());
+                        return;
+                    }
+                }
             }
 
             label4.Visible = true;

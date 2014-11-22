@@ -52,14 +52,26 @@ namespace WarZLocal_Admin
         public static Attachment readXML(XmlReader reader)
         {
             Attachment i = new Attachment();
-            i.ItemID = Helper.getInt(reader.GetAttribute(0));
-            i.Category = Helper.getInt(reader.GetAttribute(1));
-            //i.internalCategory = 2;
+            if (reader.AttributeCount == 5)
+            {
+                i.ItemID = Helper.getInt(reader.GetAttribute(0));
+                i.Category = Helper.getInt(reader.GetAttribute(1));
+                //i.internalCategory = 2;
 
-            i.Type = Helper.getInt(reader.GetAttribute(2));
-            i.SpecID = Helper.getInt(reader.GetAttribute(3));
+                i.Type = Helper.getInt(reader.GetAttribute(2));
+                i.SpecID = Helper.getInt(reader.GetAttribute(3));
 
-            i.Weight = Helper.getInt(reader.GetAttribute(4));
+                i.Weight = Helper.getInt(reader.GetAttribute(4));
+            }
+            else
+            {
+                i.ItemID = Helper.getInt(reader.GetAttribute(0));
+                i.Category = 19;
+                //i.internalCategory = 2;
+
+                i.Type = Helper.getInt(reader.GetAttribute(1));
+                i.SpecID = Helper.getInt(reader.GetAttribute(2));
+            }
 
             XmlReader subs = reader.ReadSubtree();
             while (subs.Read())

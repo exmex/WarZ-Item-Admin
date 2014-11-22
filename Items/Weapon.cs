@@ -123,7 +123,8 @@ namespace WarZLocal_Admin
             {
                 i.IsUpgradeable = Helper.getInt(reader.GetAttribute(2));
                 i.FNAME = reader.GetAttribute(3);
-                i.Weight = Helper.getInt(reader.GetAttribute(4));
+                if(reader.AttributeCount == 5)
+                    i.Weight = Helper.getInt(reader.GetAttribute(4));
             }else
                 i.Weight = Helper.getInt(reader.GetAttribute(2));
 

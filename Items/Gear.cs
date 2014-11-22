@@ -43,7 +43,8 @@ namespace WarZLocal_Admin
             i.ItemID = Helper.getInt(reader.GetAttribute(0));
             i.Category = Helper.getInt(reader.GetAttribute(1));
             //i.internalCategory = 1;
-            i.Weight = Helper.getInt(reader.GetAttribute(2));
+            if(reader.AttributeCount == 3)
+                i.Weight = Helper.getInt(reader.GetAttribute(2));
 
             XmlReader subs = reader.ReadSubtree();
             while (subs.Read())

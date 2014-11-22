@@ -300,7 +300,7 @@ namespace WarZLocal_Admin
                     else if (match2)
                     {
                         var text = textBox1.Text.Replace("\"", "");
-                        checkForText = i.Value.name.Contains(text);
+                        checkForText = i.Value.Name.Contains(text);
                     }
                     else
                         checkForText = i.Value.name.ToLower().Contains(textBox1.Text.ToLower());
@@ -912,7 +912,8 @@ namespace WarZLocal_Admin
 
                 TaskbarProgress.SetState(Handle, TaskbarProgress.TaskbarStates.NoProgress);
 
-                listView2.SelectedIndices.Add(0);
+                if(listView2.Items.Count >= 1)
+                    listView2.SelectedIndices.Add(0);
                 LoadInformation(listView2);
             }));
         }
@@ -1061,7 +1062,7 @@ namespace WarZLocal_Admin
                     if (count == 0)
                     {
                         db.Insert(a.Value);
-                        Console.WriteLine("New Attachment itemID: {0}", a.Value.ItemID);
+                        //Console.WriteLine("New Attachment itemID: {0}", a.Value.ItemID);
                         Invoke((MethodInvoker)(() =>
                         {
                             lb.Text = "Adding Attachment \"" + a.Value.Name + "\" (" + a.Value.ItemID + ")...";
@@ -1075,7 +1076,7 @@ namespace WarZLocal_Admin
                     if (count == 0)
                     {
                         db.Insert(g.Value);
-                        Console.WriteLine("New Gear itemID: {0}", g.Value.ItemID);
+                        //Console.WriteLine("New Gear itemID: {0}", g.Value.ItemID);
                         Invoke((MethodInvoker)(() =>
                         {
                             lb.Text = "Adding Gear \"" + g.Value.Name + "\" (" + g.Value.ItemID + ")...";
@@ -1089,7 +1090,7 @@ namespace WarZLocal_Admin
                     if (count == 0)
                     {
                         db.Insert(g.Value);
-                        Console.WriteLine("New Generic itemID: {0}", g.Value.ItemID);
+                        //Console.WriteLine("New Generic itemID: {0}", g.Value.ItemID);
                         Invoke((MethodInvoker)(() =>
                         {
                             lb.Text = "Adding Generic \"" + g.Value.Name + "\" (" + g.Value.ItemID + ")...";
@@ -1103,7 +1104,7 @@ namespace WarZLocal_Admin
                     if (count == 0)
                     {
                         db.Insert(w.Value);
-                        Console.WriteLine("New Weapon itemID: {0}", w.Value.ItemID);
+                        //Console.WriteLine("New Weapon itemID: {0}", w.Value.ItemID);
                         Invoke((MethodInvoker)(() =>
                         {
                             lb.Text = "Adding Weapon \"" + w.Value.Name + "\" (" + w.Value.ItemID + ")...";
